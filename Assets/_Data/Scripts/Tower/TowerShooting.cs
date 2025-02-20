@@ -27,7 +27,7 @@ public class TowerShooting : TowerAbstract
         foreach (Transform firePoint in TowerCtrl.FirePoint.Points)
         {
             Bullet newBullet = TowerCtrl.BulletSpawner.Spawn(TowerCtrl.Bullet,
-                firePoint.position);
+                firePoint.position, TowerCtrl.Bullet.transform.rotation);
             Vector3 rotDir = TowerCtrl.Rotator.forward;
             newBullet.transform.forward = rotDir;
             newBullet.gameObject.SetActive(true);

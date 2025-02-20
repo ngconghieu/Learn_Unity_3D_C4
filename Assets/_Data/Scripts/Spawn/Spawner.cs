@@ -4,25 +4,16 @@ using UnityEngine;
 
 public abstract class Spawner<T> : Singleton<Spawner<T>> where T : MonoBehaviour
 {
-    [SerializeField] protected List<T> inPoolObjs = new();
+    [SerializeField] protected List<T> poolObj = new();
 
-    public virtual T Spawn(T prefab)
+    public virtual T Spawn(T prefab, Vector3 position, Quaternion rotation)
     {
-
-        T newObject = this.GetObjFromPool(prefab);
+        T newObject = GetObjFromPool(prefab);
         if (newObject == null)
         {
-            newObject = Instantiate(prefab);
+            newObject = Instantiate(prefab, position, rotation);
         }
-
         return newObject;
-    }
-
-    public virtual T Spawn(T buletPrefab, Vector3 postion)
-    {
-        T newBullet = this.Spawn(buletPrefab);
-        newBullet.transform.position = postion;
-        return newBullet;
     }
 
     public virtual void Despawn(Transform obj)
@@ -41,19 +32,19 @@ public abstract class Spawner<T> : Singleton<Spawner<T>> where T : MonoBehaviour
 
     protected virtual void AddObjectToPool(T obj)
     {
-        this.inPoolObjs.Add(obj);
+        this.poolObj.Add(obj);
     }
 
     protected virtual void RemoveObjectFromPool(T obj)
     {
-        this.inPoolObjs.Remove(obj);
+        this.poolObj.Remove(obj);
     }
 
     protected virtual T GetObjFromPool(T prefab)
     {
-        foreach (T inPoolObj in this.inPoolObjs)
+        foreach (T inPoolObj in this.poolObj)
         {
-            if(prefab.name == inPoolObj.name)
+            if (prefab.name == inPoolObj.name)
             {
                 this.RemoveObjectFromPool(inPoolObj);
                 return inPoolObj;
