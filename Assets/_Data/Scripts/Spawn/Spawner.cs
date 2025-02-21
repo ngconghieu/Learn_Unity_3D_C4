@@ -26,28 +26,18 @@ public abstract class Spawner<T> : Singleton<Spawner<T>> where T : MonoBehaviour
         if (obj is MonoBehaviour monoBehaviour)
         {
             monoBehaviour.gameObject.SetActive(false);
-            this.AddObjectToPool(obj);
+            poolObj.Add(obj);
         }
-    }
-
-    protected virtual void AddObjectToPool(T obj)
-    {
-        this.poolObj.Add(obj);
-    }
-
-    protected virtual void RemoveObjectFromPool(T obj)
-    {
-        this.poolObj.Remove(obj);
     }
 
     protected virtual T GetObjFromPool(T prefab)
     {
-        foreach (T inPoolObj in this.poolObj)
+        foreach (T obj in this.poolObj)
         {
-            if (prefab.name == inPoolObj.name)
+            if (prefab.GetType() == obj.GetType())
             {
-                this.RemoveObjectFromPool(inPoolObj);
-                return inPoolObj;
+                poolObj.Remove(obj);
+                return obj;
             }
         }
 
