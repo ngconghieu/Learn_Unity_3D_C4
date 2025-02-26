@@ -15,8 +15,8 @@ public class TowerCtrl : GameMonoBehaviour
     [SerializeField] protected SpawnBullet bulletSpawner;
     public SpawnBullet BulletSpawner => bulletSpawner;
 
-    [SerializeField] protected Bullet bullet;
-    public Bullet Bullet => bullet;
+    [SerializeField] protected BulletCtrl bullet;
+    public BulletCtrl Bullet => bullet;
 
     [SerializeField] protected FirePoint firePoint;
     public FirePoint FirePoint => firePoint;
@@ -42,7 +42,7 @@ public class TowerCtrl : GameMonoBehaviour
     private void LoadBullet()
     {
         if (bullet != null) return;
-        bullet = GetComponentInChildren<Bullet>();
+        bullet = GetComponentInChildren<BulletCtrl>();
         bullet.gameObject.SetActive(false);
         Debug.LogWarning("LoadBullet", gameObject);
     }

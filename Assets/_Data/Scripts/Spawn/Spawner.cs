@@ -11,8 +11,16 @@ public abstract class Spawner<T> : Singleton<Spawner<T>> where T : MonoBehaviour
         T newObject = GetObjFromPool(prefab);
         if (newObject == null)
         {
-            newObject = Instantiate(prefab, position, rotation);
+            //newObject = Instantiate(prefab, position, rotation);
+            newObject = Instantiate(prefab);
         }
+        newObject.transform.SetLocalPositionAndRotation(position, rotation);
+        return newObject;
+    }
+
+    public virtual T Spawn(T prefab)
+    {
+        T newObject = GetObjFromPool(prefab) ?? Instantiate(prefab);
         return newObject;
     }
 

@@ -16,7 +16,6 @@ public class TowerShooting : TowerAbstract
     {
         LoadTarget();
         LookAtTarget();
-        //ShootTarget();
     }
 
     private void ShootTarget()
@@ -26,13 +25,10 @@ public class TowerShooting : TowerAbstract
         //spawn
         foreach (Transform firePoint in TowerCtrl.FirePoint.Points)
         {
-            Bullet newBullet = TowerCtrl.BulletSpawner.Spawn(TowerCtrl.Bullet,
-                firePoint.position, TowerCtrl.Bullet.transform.rotation);
-            Vector3 rotDir = TowerCtrl.Rotator.forward;
-            newBullet.transform.forward = rotDir;
+            BulletCtrl newBullet = TowerCtrl.BulletSpawner.Spawn(TowerCtrl.Bullet,
+                firePoint.position, TowerCtrl.Rotator.rotation);
             newBullet.gameObject.SetActive(true);
         }
-
     }
 
     private void LoadTarget()

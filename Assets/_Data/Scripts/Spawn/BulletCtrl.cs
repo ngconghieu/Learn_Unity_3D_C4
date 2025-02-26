@@ -1,8 +1,8 @@
 using UnityEngine;
 
-public class Bullet : GameMonoBehaviour
+public class BulletCtrl : GameMonoBehaviour
 {
-    [SerializeField] protected float speed = 10f;
+    [SerializeField] protected float speed = 20f;
 
     void Update()
     {
