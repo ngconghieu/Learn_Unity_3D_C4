@@ -617,7 +617,7 @@ Transform:
   m_GameObject: {fileID: 201102862}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.4, z: 0}
+  m_LocalPosition: {x: 0, y: 0.7, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -642,10 +642,10 @@ CapsuleCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 0.6
+  m_Radius: 0.7
   m_Height: 3
   m_Direction: 1
-  m_Center: {x: 0, y: 0.85, z: 0.4}
+  m_Center: {x: 0, y: 0.85, z: 0.3}
 --- !u!114 &201102866
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -658,10 +658,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b0ffdce0a889aa34c9f44c905bcb18ac, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  col: {fileID: 201102865}
   currentHP: 10
   maxHP: 10
-  isDead: 0
+  col: {fileID: 201102865}
 --- !u!4 &273882455 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3272382593975846054, guid: 5eea2e82743646d4c9133752060e553a, type: 3}
@@ -2087,6 +2086,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 20
+  despawnBullet: {fileID: 1129296824}
 --- !u!1 &690086991 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 448e07a2377557c4e899a6d81f31659f, type: 3}
@@ -2362,7 +2362,7 @@ Transform:
   m_GameObject: {fileID: 761882321}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.4, z: 0}
+  m_LocalPosition: {x: 0, y: 0.7, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -2387,10 +2387,10 @@ CapsuleCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 0.6
+  m_Radius: 0.7
   m_Height: 3
   m_Direction: 1
-  m_Center: {x: 0, y: 0.85, z: 0.4}
+  m_Center: {x: 0, y: 0.85, z: 0.3}
 --- !u!114 &761882325
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2403,10 +2403,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b0ffdce0a889aa34c9f44c905bcb18ac, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  col: {fileID: 761882324}
   currentHP: 10
   maxHP: 10
-  isDead: 0
+  col: {fileID: 761882324}
 --- !u!1 &764044517
 GameObject:
   m_ObjectHideFlags: 0
@@ -3271,6 +3270,7 @@ GameObject:
   - component: {fileID: 1128000730}
   - component: {fileID: 1128000732}
   - component: {fileID: 1128000733}
+  - component: {fileID: 1128000734}
   m_Layer: 0
   m_Name: DmgSender
   m_TagString: Untagged
@@ -3341,6 +3341,22 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &1128000734
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1128000729}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2076b4c18ccf03641867badeecaeeeb5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  dmg: 1
+  rb: {fileID: 1128000733}
+  col: {fileID: 1128000732}
+  bullet: {fileID: 645211930}
 --- !u!1 &1129296822
 GameObject:
   m_ObjectHideFlags: 0
@@ -3350,6 +3366,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1129296823}
+  - component: {fileID: 1129296824}
   m_Layer: 0
   m_Name: DespawnBullet
   m_TagString: Untagged
@@ -3372,6 +3389,21 @@ Transform:
   m_Children: []
   m_Father: {fileID: 273882455}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1129296824
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1129296822}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 310534f9b0f66d348a6785f15c95714c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  bullet: {fileID: 645211930}
+  cdTime: 0
+  DespawnTime: 7
 --- !u!1 &1173026855
 GameObject:
   m_ObjectHideFlags: 0
@@ -4654,7 +4686,7 @@ Transform:
   m_GameObject: {fileID: 1652477706}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.4, z: 0}
+  m_LocalPosition: {x: 0, y: 0.7, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -4679,10 +4711,10 @@ CapsuleCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 0.6
+  m_Radius: 0.7
   m_Height: 3
   m_Direction: 1
-  m_Center: {x: 0, y: 0.85, z: 0.4}
+  m_Center: {x: 0, y: 0.85, z: 0.3}
 --- !u!114 &1652477710
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4695,10 +4727,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b0ffdce0a889aa34c9f44c905bcb18ac, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  col: {fileID: 1652477709}
   currentHP: 10
   maxHP: 10
-  isDead: 0
+  col: {fileID: 1652477709}
 --- !u!1 &1662876107
 GameObject:
   m_ObjectHideFlags: 0

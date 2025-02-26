@@ -1,29 +1,10 @@
 using System;
 using UnityEngine;
 
-[RequireComponent(typeof(Collider))]
-public class DmgReceiver : GameMonoBehaviour
+public abstract class DmgReceiver : GameMonoBehaviour
 {
-    [SerializeField] private Collider col;
     [SerializeField] private int currentHP = 10;
     [SerializeField] private int maxHP = 10;
-    [SerializeField] private bool isDead = false;
-
-    #region LoadComponents
-    protected override void LoadComponents()
-    {
-        base.LoadComponents();
-        LoadCollider();
-    }
-
-    private void LoadCollider()
-    {
-        if(col != null) return;
-        col = GetComponent<Collider>();
-        col.isTrigger = true;
-        Debug.Log("LoadCollider", gameObject);
-    }
-    #endregion
 
     protected override void ResetValue()
     {
@@ -47,7 +28,9 @@ public class DmgReceiver : GameMonoBehaviour
         if(currentHP < 0)
         {
             currentHP = 0;
-            isDead = true;
+            IsDead();
         }
     }
+
+    protected abstract void IsDead();
 }

@@ -1,16 +1,27 @@
+using System;
 using UnityEngine;
 
-public class BulletDmgSender : MonoBehaviour
+public class BulletDmgSender : DmgSender
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    [SerializeField] protected BulletCtrl bullet;
+
+    protected override void LoadComponents()
     {
-        
+        base.LoadComponents();
+        LoadBullet();
     }
 
-    // Update is called once per frame
-    void Update()
+    private void LoadBullet()
     {
-        
+        if (bullet != null) return;
+        bullet = GetComponentInParent<BulletCtrl>();
+        Debug.LogWarning("LoadBullet", gameObject);
+    }
+
+    protected override void SendDmg(DmgReceiver dmgReceiver)
+    {
+        base.SendDmg(dmgReceiver);
+        bullet.DespawnBullet.Despawn(bullet);
+
     }
 }

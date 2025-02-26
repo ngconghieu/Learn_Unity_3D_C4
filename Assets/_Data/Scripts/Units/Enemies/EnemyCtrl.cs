@@ -24,7 +24,7 @@ public class EnemyCtrl : GameMonoBehaviour
     {
         if (dmgReceiver != null) return;
         dmgReceiver = GetComponentInChildren<DmgReceiver>();
-        dmgReceiver.transform.localPosition = new Vector3(0, 0.4f, 0);
+        dmgReceiver.transform.localPosition = new Vector3(0, 0.7f, 0);
         Debug.LogWarning("LoadDmgReceiver", gameObject);
     }
 
