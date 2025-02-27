@@ -20,12 +20,13 @@ public abstract class DmgReceiver : GameMonoBehaviour
     public virtual void Deduct(int dmg)
     {
         currentHP -= dmg;
+        IsHit();
         CheckDead();
     }
 
     protected virtual void CheckDead()
     {
-        if(currentHP < 0)
+        if(currentHP <= 0)
         {
             currentHP = 0;
             IsDead();
@@ -33,4 +34,5 @@ public abstract class DmgReceiver : GameMonoBehaviour
     }
 
     protected abstract void IsDead();
+    protected abstract void IsHit();
 }

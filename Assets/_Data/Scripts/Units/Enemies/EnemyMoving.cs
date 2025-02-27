@@ -2,11 +2,11 @@ using System;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class EnemyMoving : GameMonoBehaviour
+public abstract class EnemyMoving : GameMonoBehaviour
 {
     [SerializeField] protected EnemyCtrl enemyCtrl;
-    [SerializeField] protected string pathName = "Path_1";
     [SerializeField] protected Path enemyPath;
+    [SerializeField] protected Const.PathName pathName;
     [SerializeField] protected Transform currentPoint;
     [SerializeField] protected float pointDistance = Mathf.Infinity;
     [SerializeField] protected float stopDistance = 2f;
@@ -20,6 +20,7 @@ public class EnemyMoving : GameMonoBehaviour
         CheckMoving();
     }
 
+    #region Load Components
     private void Start()
     {
         LoadEnemyPath();
@@ -30,6 +31,22 @@ public class EnemyMoving : GameMonoBehaviour
         base.LoadComponents();
         LoadEnemyCtrl();
     }
+
+    private void LoadEnemyCtrl()
+    {
+        if (enemyCtrl != null) return;
+        enemyCtrl = GetComponentInParent<EnemyCtrl>();
+        Debug.LogWarning("LoadEnemyCtrl", gameObject);
+    }
+
+    protected virtual void LoadEnemyPath()
+    {
+        if (enemyPath != null) return;
+        enemyPath = PathManager.Instance.GetPath(pathName.ToString());
+        currentPoint = enemyPath.Points[pointNum];
+        //Debug.LogWarning("LoadEnemyPath", gameObject);
+    }
+    #endregion
 
     protected virtual void Moving()
     {
@@ -46,28 +63,13 @@ public class EnemyMoving : GameMonoBehaviour
     private void SetCurrentPoint()
     {
         pointDistance = Vector3.Distance(transform.parent.position, currentPoint.position);
-        if (pointDistance < stopDistance)
+        if (pointDistance < stopDistance && pointNum < enemyPath.Points.Count)
         {
             pointNum++;
             if (pointNum < enemyPath.Points.Count)
                 currentPoint = enemyPath.Points[pointNum];
 
         }
-    }
-
-    private void LoadEnemyCtrl()
-    {
-        if (enemyCtrl != null) return;
-        enemyCtrl = GetComponentInParent<EnemyCtrl>();
-        Debug.LogWarning("LoadEnemyCtrl", gameObject);
-    }
-
-    protected virtual void LoadEnemyPath()
-    {
-        if (enemyPath != null) return;
-        enemyPath = PathManager.Instance.GetPath(pathName);
-        currentPoint = enemyPath.Points[pointNum];
-        //Debug.LogWarning("LoadEnemyPath", gameObject);
     }
 
     protected virtual void CheckMoving()
@@ -77,6 +79,6 @@ public class EnemyMoving : GameMonoBehaviour
         else
             isMoving = false;
 
-        enemyCtrl.Animator.SetBool("isMoving", isMoving);
+        enemyCtrl.Animator.SetBool(Const.isMoving, isMoving);
     }
 }
