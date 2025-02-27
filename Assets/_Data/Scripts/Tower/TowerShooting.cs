@@ -18,7 +18,7 @@ public class TowerShooting : TowerAbstract
         LookAtTarget();
     }
 
-    private void ShootTarget()
+    protected virtual void ShootTarget()
     {
         Invoke(nameof(ShootTarget), shootSpeed);
         if (target == null) return;

@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -5,11 +6,30 @@ using UnityEngine;
 public abstract class Spawner<T> : Singleton<Spawner<T>> where T : MonoBehaviour
 {
     [SerializeField] protected List<T> poolObj = new();
+    [SerializeField] protected Transform prefabHolder;
+
+    #region Load components
+    protected override void LoadComponents()
+    {
+        base.LoadComponents();
+        LoadPrefabHolder();
+    }
+
+    private void LoadPrefabHolder()
+    {
+        if (prefabHolder != null) return;
+        prefabHolder = transform.Find("PrefabHolder");
+        Debug.LogWarning("LoadPrefabHolder", gameObject);
+    }
+    #endregion
 
     public virtual T Spawn(T prefab, Vector3 position, Quaternion rotation)
     {
         T newObject = Spawn(prefab);
         newObject.transform.SetLocalPositionAndRotation(position, rotation);
+        newObject.gameObject.SetActive(true);
+        newObject.transform.SetParent(prefabHolder);
+        newObject.name = prefab.name;
         return newObject;
     }
 
@@ -32,7 +52,8 @@ public abstract class Spawner<T> : Singleton<Spawner<T>> where T : MonoBehaviour
     {
         foreach (T obj in this.poolObj)
         {
-            if (prefab.GetType() == obj.GetType())
+            //if (prefab.GetType() == obj.GetType())
+            if (prefab.gameObject.name == obj.gameObject.name)
             {
                 poolObj.Remove(obj);
                 return obj;

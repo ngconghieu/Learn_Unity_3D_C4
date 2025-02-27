@@ -41,6 +41,7 @@ public class TowerTarget : GameMonoBehaviour
 
     private void FixedUpdate()
     {
+        RemoveDeadEnemy();
         FocusTarget();
     }
 
@@ -56,15 +57,16 @@ public class TowerTarget : GameMonoBehaviour
 
     protected virtual void AddEnemy(Collider collider)
     {
-        if(collider.TryGetComponent<EnemyCtrl>(out EnemyCtrl component))
+        if (collider.TryGetComponent<EnemyCtrl>(out EnemyCtrl component))
         {
+            if (component.DmgReceiver.CheckDead()) return;
             enemies.Add(component);
         }
     }
 
     protected virtual void RemoveEnemy(Collider collider)
     {
-        foreach(EnemyCtrl enemy in enemies)
+        foreach (EnemyCtrl enemy in enemies)
         {
             if (collider.gameObject.Equals(enemy.gameObject))
             {
@@ -75,9 +77,19 @@ public class TowerTarget : GameMonoBehaviour
     }
     protected virtual void FocusTarget()
     {
-        if (enemies.Count != 0)
-            target = enemies[0];
-        else
-            target = null;
+        if (enemies.Count == 0) return;
+        target = enemies[0];
+    }
+
+    protected virtual void RemoveDeadEnemy()
+    {
+        foreach (EnemyCtrl enemy in enemies)
+        {
+            if (enemy.DmgReceiver.CheckDead())
+            {
+                enemies.Remove(enemy);
+                return;
+            }
+        }
     }
 }

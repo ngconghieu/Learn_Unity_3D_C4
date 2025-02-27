@@ -51,7 +51,7 @@ public abstract class EnemyMoving : GameMonoBehaviour
     protected virtual void Moving()
     {
         SetCurrentPoint();
-        if (pointNum >= enemyPath.Points.Count || !canMove)
+        if (pointNum >= enemyPath.Points.Count || !canMove || enemyCtrl.DmgReceiver.CheckDead())
         {
             enemyCtrl.Agent.isStopped = true;
             return;

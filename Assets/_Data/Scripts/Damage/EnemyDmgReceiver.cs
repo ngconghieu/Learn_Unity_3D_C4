@@ -37,7 +37,7 @@ public class EnemyDmgReceiver : DmgReceiver
     protected override void IsDead()
     {
         enemyCtrl.Animator.SetTrigger(Const.isDead);
-        gameObject.SetActive(false);
+        //gameObject.SetActive(false);
     }
 
     protected override void IsHit()

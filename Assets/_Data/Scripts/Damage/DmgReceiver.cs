@@ -3,12 +3,22 @@ using UnityEngine;
 
 public abstract class DmgReceiver : GameMonoBehaviour
 {
-    [SerializeField] private int currentHP = 10;
+    [SerializeField] private int currentHP = 0;
     [SerializeField] private int maxHP = 10;
 
     protected override void ResetValue()
     {
         base.ResetValue();
+        SetCurrentHP();
+    }
+
+    private void OnEnable()
+    {
+        SetCurrentHP();
+    }
+
+    protected virtual void SetCurrentHP()
+    {
         currentHP = maxHP;
     }
 
@@ -20,18 +30,13 @@ public abstract class DmgReceiver : GameMonoBehaviour
     public virtual void Deduct(int dmg)
     {
         currentHP -= dmg;
-        IsHit();
-        CheckDead();
+        if (CheckDead())
+            IsDead();
+        else
+            IsHit();
     }
 
-    protected virtual void CheckDead()
-    {
-        if(currentHP <= 0)
-        {
-            currentHP = 0;
-            IsDead();
-        }
-    }
+    public virtual bool CheckDead() => currentHP <= 0;
 
     protected abstract void IsDead();
     protected abstract void IsHit();

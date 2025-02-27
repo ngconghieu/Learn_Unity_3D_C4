@@ -10,14 +10,24 @@ public class EnemyCtrl : GameMonoBehaviour
     public Animator Animator => animator;
     [SerializeField] protected DmgReceiver dmgReceiver;
     public DmgReceiver DmgReceiver => dmgReceiver;
+    [SerializeField] protected DespawnEnemy despawnEnemy;
+    public DespawnEnemy DespawnEnemy => despawnEnemy;
 
-
+    #region Load Components
     protected override void LoadComponents()
     {
         base.LoadComponents();
         LoadNavMeshAgent();
         LoadAnimator();
         LoadDmgReceiver();
+        LoadDespawnEnemy();
+    }
+
+    private void LoadDespawnEnemy()
+    {
+        if (despawnEnemy != null) return;
+        despawnEnemy = GetComponentInChildren<DespawnEnemy>();
+        Debug.LogWarning("LoadDespawnEnemy", gameObject);
     }
 
     private void LoadDmgReceiver()
@@ -44,4 +54,5 @@ public class EnemyCtrl : GameMonoBehaviour
         agent.acceleration = 150f;
         Debug.LogWarning("LoadNavMeshAgent", gameObject);
     }
+    #endregion
 }

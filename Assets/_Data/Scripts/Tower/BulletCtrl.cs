@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class BulletCtrl : GameMonoBehaviour
 {
-    [SerializeField] protected float speed = 20f;
+    [SerializeField] protected float speed = 30f;
     [SerializeField] protected Despawner<BulletCtrl> despawnBullet;
     public Despawner<BulletCtrl> DespawnBullet => despawnBullet;
 
