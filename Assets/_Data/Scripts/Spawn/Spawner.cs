@@ -8,12 +8,7 @@ public abstract class Spawner<T> : Singleton<Spawner<T>> where T : MonoBehaviour
 
     public virtual T Spawn(T prefab, Vector3 position, Quaternion rotation)
     {
-        T newObject = GetObjFromPool(prefab);
-        if (newObject == null)
-        {
-            //newObject = Instantiate(prefab, position, rotation);
-            newObject = Instantiate(prefab);
-        }
+        T newObject = Spawn(prefab);
         newObject.transform.SetLocalPositionAndRotation(position, rotation);
         return newObject;
     }
@@ -22,11 +17,6 @@ public abstract class Spawner<T> : Singleton<Spawner<T>> where T : MonoBehaviour
     {
         T newObject = GetObjFromPool(prefab) ?? Instantiate(prefab);
         return newObject;
-    }
-
-    public virtual void Despawn(Transform obj)
-    {
-        Destroy(obj.gameObject);
     }
 
     public virtual void Despawn(T obj)
@@ -48,7 +38,6 @@ public abstract class Spawner<T> : Singleton<Spawner<T>> where T : MonoBehaviour
                 return obj;
             }
         }
-
         return null;
     }
 }
