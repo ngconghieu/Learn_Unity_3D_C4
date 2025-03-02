@@ -48,6 +48,13 @@ public abstract class EnemyMoving : GameMonoBehaviour
     }
     #endregion
 
+    private void OnEnable()
+    {
+        pointNum = 0;
+        if (enemyPath != null)
+            currentPoint = enemyPath.Points[pointNum];
+    }
+
     protected virtual void Moving()
     {
         SetCurrentPoint();

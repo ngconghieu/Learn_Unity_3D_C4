@@ -10,14 +10,14 @@ public class SpawnBullet : Spawner<BulletCtrl>
     protected override void LoadComponents()
     {
         base.LoadComponents();
-        LoadBullet();
+        LoadBulletCtrl();
     }
 
-    private void LoadBullet()
+    private void LoadBulletCtrl()
     {
         if (bullet != null) return;
         bullet = GetComponentInChildren<BulletCtrl>();
         bullet.gameObject.SetActive(false);
-        Debug.LogWarning("LoadBullet", gameObject);
+        Debug.LogWarning("LoadBulletCtrl", gameObject);
     }
 }

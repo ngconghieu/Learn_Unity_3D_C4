@@ -1,4 +1,3 @@
-using NUnit.Framework;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -57,7 +56,7 @@ public class TowerTarget : GameMonoBehaviour
 
     protected virtual void AddEnemy(Collider collider)
     {
-        if (collider.TryGetComponent<EnemyCtrl>(out EnemyCtrl component))
+        if (collider.transform.parent.TryGetComponent<EnemyCtrl>(out EnemyCtrl component))
         {
             if (component.DmgReceiver.CheckDead()) return;
             enemies.Add(component);
@@ -68,17 +67,12 @@ public class TowerTarget : GameMonoBehaviour
     {
         foreach (EnemyCtrl enemy in enemies)
         {
-            if (collider.gameObject.Equals(enemy.gameObject))
+            if (collider.transform.parent.gameObject.Equals(enemy.gameObject))
             {
                 enemies.Remove(enemy);
                 return;
             }
         }
-    }
-    protected virtual void FocusTarget()
-    {
-        if (enemies.Count == 0) return;
-        target = enemies[0];
     }
 
     protected virtual void RemoveDeadEnemy()
@@ -91,5 +85,31 @@ public class TowerTarget : GameMonoBehaviour
                 return;
             }
         }
+    }
+
+    protected virtual void FocusTarget()
+    {
+        if (enemies.Count == 0)
+        {
+            target = null;
+            return;
+        }
+        //Show raycast to all enemies
+        foreach (EnemyCtrl enemy in enemies)
+            DetectEnemy(enemy);
+        target = enemies.Find(enemy => DetectEnemy(enemy));
+    }
+
+    private bool DetectEnemy(EnemyCtrl enemy)
+    {
+        Vector3 direction = enemy.DmgReceiver.transform.position - transform.position;
+        if (Physics.Raycast(transform.position, direction.normalized, out RaycastHit hit, direction.magnitude))
+        {
+            //Debug.Log(hit.transform.parent.gameObject.name);
+            bool canSeeEnemy = hit.transform.parent.gameObject.Equals(enemy.gameObject);
+            Debug.DrawRay(transform.position, direction, canSeeEnemy ? Color.green : Color.red);
+            return canSeeEnemy;
+        }
+        return false;
     }
 }

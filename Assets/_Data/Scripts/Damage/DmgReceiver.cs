@@ -5,6 +5,7 @@ public abstract class DmgReceiver : GameMonoBehaviour
 {
     [SerializeField] private int currentHP = 0;
     [SerializeField] private int maxHP = 10;
+    [SerializeField] protected bool immortal = false;
 
     protected override void ResetValue()
     {
@@ -29,6 +30,7 @@ public abstract class DmgReceiver : GameMonoBehaviour
 
     public virtual void Deduct(int dmg)
     {
+        if (immortal) return;
         currentHP -= dmg;
         if (CheckDead())
             IsDead();

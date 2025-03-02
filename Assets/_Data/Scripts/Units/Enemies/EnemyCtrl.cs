@@ -2,6 +2,7 @@ using System;
 using UnityEngine;
 using UnityEngine.AI;
 
+[RequireComponent(typeof(NavMeshAgent))]
 public class EnemyCtrl : GameMonoBehaviour
 {
     [SerializeField] protected NavMeshAgent agent;
