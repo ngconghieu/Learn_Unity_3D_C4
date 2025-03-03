@@ -1,14 +1,11 @@
-using UnityEngine;
-
 public static class Const
 {
-    public static string isDead = "isDead";
-    public static string isHit = "isHit";
-    public static string isMoving = "isMoving";
+    private static string _isDead = "isDead";
+    private static string _isHit = "isHit";
+    private static string _isMoving = "isMoving";
 
-    public enum PathName
-    {
-        Path_0,
-        Path_1
-    }
+    public static string IsDead => _isDead;
+    public static string IsHit => _isHit;
+    public static string IsMoving => _isMoving;
+
 }

@@ -6,7 +6,7 @@ public abstract class EnemyMoving : GameMonoBehaviour
 {
     [SerializeField] protected EnemyCtrl enemyCtrl;
     [SerializeField] protected Path enemyPath;
-    [SerializeField] protected Const.PathName pathName;
+    [SerializeField] protected int pathName;
     [SerializeField] protected Transform currentPoint;
     [SerializeField] protected float pointDistance = Mathf.Infinity;
     [SerializeField] protected float stopDistance = 2f;
@@ -42,7 +42,7 @@ public abstract class EnemyMoving : GameMonoBehaviour
     protected virtual void LoadEnemyPath()
     {
         if (enemyPath != null) return;
-        enemyPath = PathManager.Instance.GetPath(pathName.ToString());
+        enemyPath = PathManager.Instance.GetPath(pathName);
         currentPoint = enemyPath.Points[pointNum];
         //Debug.LogWarning("LoadEnemyPath", gameObject);
     }
@@ -86,6 +86,6 @@ public abstract class EnemyMoving : GameMonoBehaviour
         else
             isMoving = false;
 
-        enemyCtrl.Animator.SetBool(Const.isMoving, isMoving);
+        enemyCtrl.Animator.SetBool(Const.IsMoving, isMoving);
     }
 }
