@@ -5,8 +5,8 @@ using UnityEngine;
 
 public abstract class Spawner<T> : Singleton<Spawner<T>> where T : MonoBehaviour
 {
-    [SerializeField] protected List<T> poolObj = new();
     [SerializeField] protected Transform prefabHolder;
+    [SerializeField] protected List<T> poolObj = new();
 
     #region Load components
     protected override void LoadComponents()
