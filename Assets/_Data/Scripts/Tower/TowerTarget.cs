@@ -56,6 +56,7 @@ public class TowerTarget : GameMonoBehaviour
 
     protected virtual void AddEnemy(Collider collider)
     {
+        if (collider.transform.parent == null) return;
         if (collider.transform.parent.TryGetComponent<EnemyCtrl>(out EnemyCtrl component))
         {
             if (component.DmgReceiver.CheckDead()) return;
@@ -65,6 +66,7 @@ public class TowerTarget : GameMonoBehaviour
 
     protected virtual void RemoveEnemy(Collider collider)
     {
+        if(collider.transform.parent == null) return;
         foreach (EnemyCtrl enemy in enemies)
         {
             if (collider.transform.parent.gameObject.Equals(enemy.gameObject))
@@ -105,6 +107,7 @@ public class TowerTarget : GameMonoBehaviour
         Vector3 direction = enemy.DmgReceiver.transform.position - transform.position;
         if (Physics.Raycast(transform.position, direction.normalized, out RaycastHit hit, direction.magnitude))
         {
+            if(hit.transform.parent == null) return false;
             //Debug.Log(hit.transform.parent.gameObject.name);
             bool canSeeEnemy = hit.transform.parent.gameObject.Equals(enemy.gameObject);
             Debug.DrawRay(transform.position, direction, canSeeEnemy ? Color.green : Color.red);

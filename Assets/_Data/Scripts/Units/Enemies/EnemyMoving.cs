@@ -86,6 +86,6 @@ public abstract class EnemyMoving : GameMonoBehaviour
         else
             isMoving = false;
 
-        enemyCtrl.Animator.SetBool(Const.IsMoving, isMoving);
+        enemyCtrl.Animator.SetBool(Const.IsRunning, isMoving);
     }
 }
