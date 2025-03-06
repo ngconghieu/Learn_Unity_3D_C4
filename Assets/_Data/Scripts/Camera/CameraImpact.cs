@@ -1,103 +1,134 @@
+using System;
 using UnityEngine;
 public class CameraImpact : GameMonoBehaviour
 {
-        public float TargetLength = 3.0f;
-        public float SpeedDamp = 0.0f;
-        public Transform CollisionSocket;
-        public float CollisionRadius = 0.25f;
-        public LayerMask CollisionMask = 0;
-        public Camera Camera;
-        public float CameraViewportExtentsMultipllier = 1.0f;
+    [SerializeField] protected float targetLength = 6;
+    [SerializeField] protected float speedDamp = 0.3f;
+    [SerializeField] protected Transform collisionSocket;
+    [SerializeField] protected float collisionRadius = 0.25f;
+    [SerializeField] protected Camera cam;
 
-        private Vector3 _socketVelocity;
+    public float TargetLength => targetLength;
 
-        private void LateUpdate()
+    private Vector3 _socketVelocity;
+
+    #region Load Components
+    protected override void LoadComponents()
+    {
+        base.LoadComponents();
+        LoadCollisionSocket();
+        LoadCamera();
+    }
+
+    private void LoadCollisionSocket()
+    {
+        if (collisionSocket != null) return;
+        collisionSocket = GetComponentInChildren<Transform>();
+        Debug.LogWarning("LoadCollisionSocket", gameObject);
+    }
+
+    private void LoadCamera()
+    {
+        if (cam != null) return;
+        cam = collisionSocket.GetComponentInChildren<Camera>();
+        Debug.LogWarning("LoadCamera", gameObject);
+    }
+    #endregion
+
+    private void LateUpdate()
+    {
+        SetCamPosition();
+        UpdateLength();
+    }
+
+    private void SetCamPosition()
+    {
+        cam.transform.localPosition = -Vector3.forward * cam.nearClipPlane; //set camera behind player at near clip plane
+    }
+
+    private float GetCollisionRadius()
+    {
+        float halfFOV = cam.fieldOfView / 2 * Mathf.Deg2Rad;
+        float heightOfNCP = Mathf.Tan(halfFOV) * cam.nearClipPlane;
+        float widthOfNCP = heightOfNCP * cam.aspect;
+        return new Vector3(widthOfNCP, heightOfNCP).magnitude;
+    }
+
+    private float GetDesiredTargetLength()
+    {
+        collisionRadius = GetCollisionRadius();
+        Ray ray = new(transform.position, -transform.forward);
+        if (Physics.SphereCast(ray, collisionRadius, out RaycastHit hit, targetLength))
         {
-            if (Camera != null)
+            return hit.distance;
+        }
+        else
+        {
+            return targetLength;
+        }
+    }
+    /*
+     Shoot a ray from the player. If it hits something, return the distance to the hit point
+    , otherwise return the target length (distance to player)
+     */
+    private void UpdateLength()
+    {
+        float targetLength = GetDesiredTargetLength();
+        Vector3 newSocketLocalPosition = -Vector3.forward * targetLength;
+
+        collisionSocket.localPosition = Vector3.SmoothDamp(
+            collisionSocket.localPosition,
+            newSocketLocalPosition,
+            ref _socketVelocity,
+            speedDamp);
+    }
+
+    #region drawing gizmos
+    private void OnDrawGizmos()
+    {
+        if (collisionSocket != null)
+        {
+            Gizmos.color = Color.green;
+            Gizmos.DrawLine(transform.position, collisionSocket.transform.position);
+            DrawGizmoSphere(collisionSocket.transform.position, collisionRadius);
+        }
+    }
+
+    private void DrawGizmoSphere(Vector3 pos, float radius)
+    {
+        Quaternion rot = Quaternion.Euler(-90.0f, 0.0f, 0.0f);
+
+        int alphaSteps = 8;
+        int betaSteps = 16;
+
+        float deltaAlpha = Mathf.PI / alphaSteps;
+        float deltaBeta = 2.0f * Mathf.PI / betaSteps;
+
+        for (int a = 0; a < alphaSteps; a++)
+        {
+            for (int b = 0; b < betaSteps; b++)
             {
-                CollisionRadius = GetCollisionRadiusForCamera(Camera);
-                Camera.transform.localPosition = -Vector3.forward * Camera.nearClipPlane;
-            }
+                float alpha = a * deltaAlpha;
+                float beta = b * deltaBeta;
 
-            UpdateLength();
-        }
+                Vector3 p1 = pos + rot * GetSphericalPoint(alpha, beta, radius);
+                Vector3 p2 = pos + rot * GetSphericalPoint(alpha + deltaAlpha, beta, radius);
+                Vector3 p3 = pos + rot * GetSphericalPoint(alpha + deltaAlpha, beta - deltaBeta, radius);
 
-        private float GetCollisionRadiusForCamera(Camera cam)
-        {
-            float halfFOV = (cam.fieldOfView / 2.0f) * Mathf.Deg2Rad; // vertical FOV in radians
-            float nearClipPlaneHalfHeight = Mathf.Tan(halfFOV) * cam.nearClipPlane * CameraViewportExtentsMultipllier;
-            float nearClipPlaneHalfWidth = nearClipPlaneHalfHeight * cam.aspect;
-            float collisionRadius = new Vector2(nearClipPlaneHalfWidth, nearClipPlaneHalfHeight).magnitude; // Pythagoras
-
-            return collisionRadius;
-        }
-
-        private float GetDesiredTargetLength()
-        {
-            Ray ray = new(transform.position, -transform.forward);
-            if (Physics.SphereCast(ray, Mathf.Max(0.001f, CollisionRadius), out RaycastHit hit, TargetLength, CollisionMask))
-            {
-                return hit.distance;
-            }
-            else
-            {
-                return TargetLength;
+                Gizmos.DrawLine(p1, p2);
+                Gizmos.DrawLine(p2, p3);
             }
         }
+    }
 
-        private void UpdateLength()
-        {
-            float targetLength = GetDesiredTargetLength();
-            Vector3 newSocketLocalPosition = -Vector3.forward * targetLength;
+    private Vector3 GetSphericalPoint(float alpha, float beta, float radius)
+    {
+        Vector3 point;
+        point.x = radius * Mathf.Sin(alpha) * Mathf.Cos(beta);
+        point.y = radius * Mathf.Sin(alpha) * Mathf.Sin(beta);
+        point.z = radius * Mathf.Cos(alpha);
 
-            CollisionSocket.localPosition = Vector3.SmoothDamp(
-                CollisionSocket.localPosition, newSocketLocalPosition, ref _socketVelocity, SpeedDamp);
-        }
-
-        private void OnDrawGizmos()
-        {
-            if (CollisionSocket != null)
-            {
-                Gizmos.color = Color.green;
-                Gizmos.DrawLine(transform.position, CollisionSocket.transform.position);
-                DrawGizmoSphere(CollisionSocket.transform.position, CollisionRadius);
-            }
-        }
-
-        private void DrawGizmoSphere(Vector3 pos, float radius)
-        {
-            Quaternion rot = Quaternion.Euler(-90.0f, 0.0f, 0.0f);
-
-            int alphaSteps = 8;
-            int betaSteps = 16;
-
-            float deltaAlpha = Mathf.PI / alphaSteps;
-            float deltaBeta = 2.0f * Mathf.PI / betaSteps;
-
-            for (int a = 0; a < alphaSteps; a++)
-            {
-                for (int b = 0; b < betaSteps; b++)
-                {
-                    float alpha = a * deltaAlpha;
-                    float beta = b * deltaBeta;
-
-                    Vector3 p1 = pos + rot * GetSphericalPoint(alpha, beta, radius);
-                    Vector3 p2 = pos + rot * GetSphericalPoint(alpha + deltaAlpha, beta, radius);
-                    Vector3 p3 = pos + rot * GetSphericalPoint(alpha + deltaAlpha, beta - deltaBeta, radius);
-
-                    Gizmos.DrawLine(p1, p2);
-                    Gizmos.DrawLine(p2, p3);
-                }
-            }
-        }
-
-        private Vector3 GetSphericalPoint(float alpha, float beta, float radius)
-        {
-            Vector3 point;
-            point.x = radius * Mathf.Sin(alpha) * Mathf.Cos(beta);
-            point.y = radius * Mathf.Sin(alpha) * Mathf.Sin(beta);
-            point.z = radius * Mathf.Cos(alpha);
-
-            return point;
-        }
+        return point;
+    }
+    #endregion
 }

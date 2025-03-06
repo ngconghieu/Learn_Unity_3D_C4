@@ -4,97 +4,51 @@ using UnityEngine.InputSystem;
 
 public class InputManager : Singleton<InputManager>
 {
-    private InputSystem_Actions _inputActions;
-    private Vector2 _movement;
-    private Vector2 _mouseRotation;
-    public Vector2 Movement => _movement;
+    private Vector2 _moveInput;
+    private Vector2 _cameraInput;
+    public Vector2 MoveInput => _moveInput;
 
-    public Vector2 MouseRotation => _mouseRotation;
+    public Vector2 CameraInput => _cameraInput;
     public bool IsWalking { get; private set; }
     public bool IsRunning { get; private set; }
     public bool IsJumping { get; private set; }
     public bool IsLeftClicking { get; private set; }
     public bool IsRightClicking { get; private set; }
 
-    #region initialization
-    protected override void Awake()
+    public void OnLookEvent(InputAction.CallbackContext context)
     {
-        base.Awake();
-        _inputActions = new();
+        _cameraInput = context.ReadValue<Vector2>();
     }
 
-    private void OnEnable()
+    public void OnMoveEvent(InputAction.CallbackContext context)
     {
-        RegisterEvents();
-        _inputActions.Player.Enable();
+        _moveInput = context.ReadValue<Vector2>();
+        IsWalking = _moveInput.x != 0 || _moveInput.y != 0;
+        if (context.canceled)
+        {
+            _moveInput = Vector2.zero;
+            IsWalking = false;
+            IsRunning = false;
+        }
     }
 
-    private void OnDisable()
+    public void OnSprintEvent(InputAction.CallbackContext context)
     {
-        UnRegisterEvent();
-        _inputActions.Player.Disable();
-    }
-    #endregion
-
-    private void RegisterEvents()
-    {
-        _inputActions.Player.Move.performed += OnMovePerformed;
-        _inputActions.Player.Move.canceled += OnMoveCanceled;
-        _inputActions.Player.Sprint.performed += OnSprintPerformed;
-        _inputActions.Player.Sprint.canceled += OnSprintCanceled;
-        _inputActions.Player.Look.performed += OnLookPerformed;
-        _inputActions.Player.Look.canceled += OnLookCanceled;
-        _inputActions.Player.Attack.performed += OnAttackPerformed;
-
+        IsRunning = context.ReadValueAsButton();
     }
 
-    private void UnRegisterEvent()
+    public void OnJumpEvent(InputAction.CallbackContext context)
     {
-        _inputActions.Player.Move.performed -= OnMovePerformed;
-        _inputActions.Player.Move.canceled -= OnMoveCanceled;
-        _inputActions.Player.Sprint.performed -= OnSprintPerformed;
-        _inputActions.Player.Sprint.canceled -= OnSprintCanceled;
-        _inputActions.Player.Look.performed -= OnLookPerformed;
-        _inputActions.Player.Look.canceled -= OnLookCanceled;
-        _inputActions.Player.Attack.performed -= OnAttackPerformed;
+        IsJumping = context.ReadValueAsButton();
     }
 
-    private void OnAttackPerformed(InputAction.CallbackContext context)
+    public void OnAttackEvent(InputAction.CallbackContext context)
     {
         IsLeftClicking = context.ReadValueAsButton();
     }
 
-    private void OnLookPerformed(InputAction.CallbackContext context)
+    public void OnBlockEvent(InputAction.CallbackContext context)
     {
-        _mouseRotation = context.ReadValue<Vector2>();
+        IsRightClicking = context.ReadValueAsButton();
     }
-
-    private void OnLookCanceled(InputAction.CallbackContext context)
-    {
-        _mouseRotation = Vector2.zero;
-    }
-
-    private void OnSprintCanceled(InputAction.CallbackContext context)
-    {
-        IsRunning = false;
-    }
-
-    private void OnMoveCanceled(InputAction.CallbackContext context)
-    {
-        _movement = Vector2.zero;
-        IsWalking = false;
-        IsRunning = false;
-    }
-
-    private void OnMovePerformed(InputAction.CallbackContext ctx)
-    {
-        _movement = ctx.ReadValue<Vector2>();
-        IsWalking = _movement.x != 0 || _movement.y != 0;
-    }
-
-    private void OnSprintPerformed(InputAction.CallbackContext ctx)
-    {
-        IsRunning = IsWalking && ctx.ReadValueAsButton();
-    }
-
 }

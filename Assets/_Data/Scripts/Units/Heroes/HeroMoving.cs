@@ -58,7 +58,7 @@ public class HeroMoving : GameMonoBehaviour
             heroCtrl.Rigidbody.linearVelocity = new Vector3(0, heroCtrl.Rigidbody.linearVelocity.y, 0);
             return;
         }
-        Vector2 movement = InputManager.Instance.Movement;
+        Vector2 movement = InputManager.Instance.MoveInput;
         movingDirection = new Vector3(movement.x, movingDirection.y, movement.y).normalized;
         RotateHero();
         float speed = isRunning ? (runningSpeedX * walkingSpeed) : walkingSpeed;
