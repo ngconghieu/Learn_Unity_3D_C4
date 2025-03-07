@@ -1,13 +1,14 @@
 using System;
 using UnityEngine;
 
+[RequireComponent(typeof(CharacterController))]
 public class HeroCtrl : GameMonoBehaviour
 {
     [SerializeField] protected Animator animator;
-    [SerializeField] protected Rigidbody rb;
+    [SerializeField] protected CharacterController characterController;
     [SerializeField] protected CameraCtrl cameraCtrl;
     public Animator Animator => animator;
-    public Rigidbody Rigidbody => rb;
+    public CharacterController CharacterController => characterController;
     public CameraCtrl CameraCtrl => cameraCtrl;
 
     #region Load Components
@@ -15,8 +16,18 @@ public class HeroCtrl : GameMonoBehaviour
     {
         base.LoadComponents();
         LoadAnimator();
-        LoadRigibody();
+        LoadCharacterController();
         LoadCameraCtrl();
+    }
+
+    private void LoadCharacterController()
+    {
+        if (characterController != null) return;
+        characterController = GetComponent<CharacterController>();
+        characterController.height = 3.4f;
+        characterController.center = new Vector3(0, 1.7f, 0);
+        characterController.radius = 0.3f;
+        Debug.LogWarning("LoadCharacterController", gameObject);
     }
 
     private void LoadCameraCtrl()
@@ -25,13 +36,6 @@ public class HeroCtrl : GameMonoBehaviour
         cameraCtrl = FindAnyObjectByType<CameraCtrl>();
         cameraCtrl.SetPosition(transform.position);
         Debug.LogWarning("LoadCameraCtrl", gameObject);
-    }
-
-    private void LoadRigibody()
-    {
-        if (rb != null) return;
-        rb = GetComponent<Rigidbody>();
-        Debug.LogWarning("LoadRigibody", gameObject);
     }
 
     private void LoadAnimator()

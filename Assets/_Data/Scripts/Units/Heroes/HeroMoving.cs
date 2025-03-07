@@ -1,41 +1,21 @@
 using System;
 using UnityEngine;
 
-public class HeroMoving : GameMonoBehaviour
+public class HeroMoving : HeroAbstract
 {
-    [SerializeField] protected HeroCtrl heroCtrl;
-    [SerializeField] protected Vector3 movingDirection = Vector3.zero;
+    [SerializeField] protected Vector3 movingDirection;
     [SerializeField] protected float walkingSpeed = 5f;
     [SerializeField] protected float runningSpeedX = 1.5f;
     [SerializeField] protected float rotateSpeed = 10f;
-    [SerializeField] protected float gravity = -0.8f;
     [SerializeField] protected bool isWalking = false;
     [SerializeField] protected bool isRunning = false;
-
-    #region Load Components
-    protected override void LoadComponents()
-    {
-        base.LoadComponents();
-        LoadHeroCtrl();
-    }
-
-    private void LoadHeroCtrl()
-    {
-        if (heroCtrl != null) return;
-        heroCtrl = GetComponentInParent<HeroCtrl>();
-        Debug.LogWarning("LoadHeroCtrl", gameObject);
-    }
-    #endregion
+    private Vector2 _movingInput;
+    private Quaternion _yAxis;
 
     private void Update()
     {
         CheckMovement();
         AnimationHandling();
-
-    }
-
-    private void FixedUpdate()
-    {
         CheckMoving();
     }
 
@@ -47,27 +27,27 @@ public class HeroMoving : GameMonoBehaviour
 
     private void AnimationHandling()
     {
-        heroCtrl.Animator.SetBool(Const.IsRunning, isRunning);
-        heroCtrl.Animator.SetBool(Const.IsWalking, isWalking);
+        HeroCtrl.Animator.SetBool(Const.IsRunning, isRunning);
+        HeroCtrl.Animator.SetBool(Const.IsWalking, isWalking);
     }
 
     private void CheckMoving()
     {
-        if (!isWalking)
-        {
-            heroCtrl.Rigidbody.linearVelocity = new Vector3(0, heroCtrl.Rigidbody.linearVelocity.y, 0);
-            return;
-        }
-        Vector2 movement = InputManager.Instance.MoveInput;
-        movingDirection = new Vector3(movement.x, movingDirection.y, movement.y).normalized;
-        RotateHero();
+        if (!isWalking) return;
+        _movingInput = InputManager.Instance.MoveInput;
+        //Get rotation of hero though camera
+        _yAxis = Quaternion.Euler(0, HeroCtrl.CameraCtrl.ControlRotation.y, 0);
+        Vector3 forward = _yAxis * Vector3.forward;
+        Vector3 right = _yAxis * Vector3.right;
+        movingDirection = (forward * _movingInput.y + right * _movingInput.x).normalized;
         float speed = isRunning ? (runningSpeedX * walkingSpeed) : walkingSpeed;
+        RotateHero();
         Moving(speed);
     }
 
     private void RotateHero()
     {
-        Quaternion targetRotation = Quaternion.LookRotation(movingDirection);
+        Quaternion targetRotation = Quaternion.LookRotation(movingDirection, Vector3.up);
         transform.parent.rotation = Quaternion.Slerp(
             transform.parent.rotation,
             targetRotation,
@@ -76,8 +56,6 @@ public class HeroMoving : GameMonoBehaviour
 
     private void Moving(float speed)
     {
-
-        //transform.parent.Translate(Time.deltaTime * speed * movingDirection, Space.World);
-        heroCtrl.Rigidbody.linearVelocity = new Vector3(movingDirection.x * speed, heroCtrl.Rigidbody.linearVelocity.y + gravity, movingDirection.z * speed);
+        HeroCtrl.CharacterController.Move(speed * Time.deltaTime * movingDirection);
     }
 }

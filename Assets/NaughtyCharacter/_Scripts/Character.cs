@@ -14,7 +14,7 @@ namespace NaughtyCharacter
         [Header("Control Rotation")]
         public float MinPitchAngle = -45.0f;
         public float MaxPitchAngle = 75.0f;
-
+        //done
         [Header("Character Orientation")]
         public ERotationBehavior RotationBehavior = ERotationBehavior.OrientRotationToMovement;
         public float MinRotationSpeed = 600.0f; // The turn speed when the player is at max speed (in degrees/second)

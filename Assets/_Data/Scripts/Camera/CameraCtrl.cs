@@ -13,6 +13,7 @@ public class CameraCtrl : GameMonoBehaviour
     [SerializeField] protected float minPitchAngle = -45.0f;
     private Vector3 _velocity;
     private Vector2 _controlRotation;
+    public Vector2 ControlRotation => _controlRotation;
 
     public virtual void SetPosition(Vector3 HeroPosition)
     {
