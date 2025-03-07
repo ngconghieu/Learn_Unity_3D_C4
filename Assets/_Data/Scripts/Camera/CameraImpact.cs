@@ -2,14 +2,13 @@ using System;
 using UnityEngine;
 public class CameraImpact : GameMonoBehaviour
 {
-    [SerializeField] protected float targetLength = 6;
-    [SerializeField] protected float speedDamp = 0.3f;
-    [SerializeField] protected Transform collisionSocket;
-    [SerializeField] protected float collisionRadius = 0.25f;
-    [SerializeField] protected Camera cam;
-
-    public float TargetLength => targetLength;
-
+    [SerializeField] private float targetLength = 6;
+    [SerializeField] private float maxTargetLength = 10;
+    [SerializeField] private float minTargetLength = 2;
+    [SerializeField] private float speedDamp = 0.3f;
+    [SerializeField] private Transform collisionSocket;
+    [SerializeField] private float collisionRadius = 0.25f;
+    [SerializeField] private Camera cam;
     private Vector3 _socketVelocity;
 
     #region Load Components
@@ -38,12 +37,21 @@ public class CameraImpact : GameMonoBehaviour
     private void LateUpdate()
     {
         SetCamPosition();
+        CheckTargetLengthChange();
         UpdateLength();
     }
 
     private void SetCamPosition()
     {
         cam.transform.localPosition = -Vector3.forward * cam.nearClipPlane; //set camera behind player at near clip plane
+    }
+
+    private void CheckTargetLengthChange()
+    {
+        float scrollInput = InputManager.Instance.ScrollInput;
+        if (scrollInput == 0) return;
+        targetLength -= scrollInput;
+        targetLength = Mathf.Clamp(targetLength, 1, 10);
     }
 
     private float GetCollisionRadius()

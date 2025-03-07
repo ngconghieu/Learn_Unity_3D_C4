@@ -3,48 +3,44 @@ using UnityEngine;
 
 public class CameraCtrl : GameMonoBehaviour
 {
-    [SerializeField] protected CameraImpact cameraImpact;
+    [Header("Camera Position")]
     [SerializeField] protected float cameraPositionSmoothTime = 0.1f;
+    [SerializeField] protected float cameraHeight = 3.0f;
+
+    [Header("Camera Rotation")]
     [SerializeField] protected float rotationSpeed = 10.0f;
+    [SerializeField] protected float maxPitchAngle = 75.0f;
+    [SerializeField] protected float minPitchAngle = -45.0f;
     private Vector3 _velocity;
-
-    #region Load Components
-    protected override void LoadComponents()
-    {
-        base.LoadComponents();
-        LoadCameraImpact();
-    }
-
-    private void LoadCameraImpact()
-    {
-        if (cameraImpact != null) return;
-        cameraImpact = GetComponentInChildren<CameraImpact>();
-        Debug.LogWarning("LoadCameraImpact", gameObject);
-    }
-    #endregion
+    private Vector2 _controlRotation;
 
     public virtual void SetPosition(Vector3 HeroPosition)
     {
-        transform.position = Vector3.SmoothDamp(transform.position, HeroPosition, ref _velocity, cameraPositionSmoothTime);
+        Vector3 cameraPosition = new(HeroPosition.x, HeroPosition.y + cameraHeight, HeroPosition.z);
+        transform.position = Vector3.SmoothDamp(transform.position, cameraPosition, ref _velocity, cameraPositionSmoothTime);
     }
 
-    public virtual void SetRotation(Vector2 controlRotation)
+    public virtual void SetRotation()
     {
-        Quaternion rigTargetLocalRotation = Quaternion.Euler(controlRotation.y, 0.0f, 0.0f);
+        Vector2 camInput = InputManager.Instance.CameraInput;
+
+        // Y Rotation (Yaw Rotation)
+        _controlRotation.y += camInput.x; //if mouse right, then y rotation is right
 
         // X Rotation (Pitch Rotation)
-        Quaternion pivotTargetLocalRotation = Quaternion.Euler(0.0f, -controlRotation.x, 0.0f);
+        _controlRotation.x -= camInput.y; //if mouse up, then x rotation is down
 
-        if (rotationSpeed > 0.0f)
-        {
-            transform.localRotation = Quaternion.Slerp(transform.localRotation, rigTargetLocalRotation, rotationSpeed * Time.deltaTime);
-            cameraImpact.transform.localRotation = Quaternion.Slerp(cameraImpact.transform.localRotation, pivotTargetLocalRotation, rotationSpeed * Time.deltaTime);
-        }
-        else
-        {
-            transform.localRotation = rigTargetLocalRotation;
-            cameraImpact.transform.localRotation = pivotTargetLocalRotation;
-        }
+        //SetControlRotation(_controlRotation);
+        float xAxis = _controlRotation.x;
+        xAxis = Mathf.Clamp(xAxis, minPitchAngle, maxPitchAngle);
+        //Limit the x rotation, so the camera can't rotate up and down too much
+
+        transform.localRotation = Quaternion.Euler(xAxis, _controlRotation.y, 0);
     }
 
 }
+/*
+ -> Set control rotation
+
+
+*/

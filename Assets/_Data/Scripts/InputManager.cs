@@ -9,6 +9,7 @@ public class InputManager : Singleton<InputManager>
     public Vector2 MoveInput => _moveInput;
 
     public Vector2 CameraInput => _cameraInput;
+    public float ScrollInput { get; private set; }
     public bool IsWalking { get; private set; }
     public bool IsRunning { get; private set; }
     public bool IsJumping { get; private set; }
@@ -50,5 +51,11 @@ public class InputManager : Singleton<InputManager>
     public void OnBlockEvent(InputAction.CallbackContext context)
     {
         IsRightClicking = context.ReadValueAsButton();
+    }
+
+    public void OnScrollEvent(InputAction.CallbackContext context)
+    {
+        ScrollInput = context.ReadValue<Vector2>().y; 
+
     }
 }
