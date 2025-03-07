@@ -56,6 +56,5 @@ public class InputManager : Singleton<InputManager>
     public void OnScrollEvent(InputAction.CallbackContext context)
     {
         ScrollInput = context.ReadValue<Vector2>().y; 
-
     }
 }

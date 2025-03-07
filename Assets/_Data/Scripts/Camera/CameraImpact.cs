@@ -4,32 +4,33 @@ public class CameraImpact : GameMonoBehaviour
 {
     [SerializeField] private float targetLength = 6;
     [SerializeField] private float maxTargetLength = 10;
-    [SerializeField] private float minTargetLength = 2;
+    [SerializeField] private float minTargetLength = 1;
     [SerializeField] private float speedDamp = 0.3f;
     [SerializeField] private Transform collisionSocket;
     [SerializeField] private float collisionRadius = 0.25f;
     [SerializeField] private Camera cam;
+    [SerializeField] private LayerMask layerMask = 0;
     private Vector3 _socketVelocity;
 
     #region Load Components
     protected override void LoadComponents()
     {
         base.LoadComponents();
-        LoadCollisionSocket();
         LoadCamera();
+        LoadCollisionSocket();
     }
 
     private void LoadCollisionSocket()
     {
         if (collisionSocket != null) return;
-        collisionSocket = GetComponentInChildren<Transform>();
+        collisionSocket = cam.transform.parent.GetComponent<Transform>();
         Debug.LogWarning("LoadCollisionSocket", gameObject);
     }
 
     private void LoadCamera()
     {
         if (cam != null) return;
-        cam = collisionSocket.GetComponentInChildren<Camera>();
+        cam = GetComponentInChildren<Camera>();
         Debug.LogWarning("LoadCamera", gameObject);
     }
     #endregion
@@ -43,6 +44,7 @@ public class CameraImpact : GameMonoBehaviour
 
     private void SetCamPosition()
     {
+        collisionRadius = GetCollisionRadius();
         cam.transform.localPosition = -Vector3.forward * cam.nearClipPlane; //set camera behind player at near clip plane
     }
 
@@ -51,7 +53,7 @@ public class CameraImpact : GameMonoBehaviour
         float scrollInput = InputManager.Instance.ScrollInput;
         if (scrollInput == 0) return;
         targetLength -= scrollInput;
-        targetLength = Mathf.Clamp(targetLength, 1, 10);
+        targetLength = Mathf.Clamp(targetLength, minTargetLength, maxTargetLength);
     }
 
     private float GetCollisionRadius()
@@ -64,9 +66,8 @@ public class CameraImpact : GameMonoBehaviour
 
     private float GetDesiredTargetLength()
     {
-        collisionRadius = GetCollisionRadius();
         Ray ray = new(transform.position, -transform.forward);
-        if (Physics.SphereCast(ray, collisionRadius, out RaycastHit hit, targetLength))
+        if (Physics.SphereCast(ray, collisionRadius, out RaycastHit hit, targetLength, layerMask))
         {
             return hit.distance;
         }

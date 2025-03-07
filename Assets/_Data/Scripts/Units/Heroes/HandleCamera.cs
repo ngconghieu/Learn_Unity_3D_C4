@@ -11,6 +11,6 @@ public class HandleCamera : HeroAbstract
     private void SetupCamera()
     {
         HeroCtrl.CameraCtrl.SetPosition(transform.parent.position);
-        HeroCtrl.CameraCtrl.SetRotation();
+        HeroCtrl.CameraCtrl.HandleCameraRotation();
     }
 }

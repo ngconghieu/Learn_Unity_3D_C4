@@ -20,7 +20,7 @@ public class CameraCtrl : GameMonoBehaviour
         transform.position = Vector3.SmoothDamp(transform.position, cameraPosition, ref _velocity, cameraPositionSmoothTime);
     }
 
-    public virtual void SetRotation()
+    public virtual void HandleCameraRotation()
     {
         Vector2 camInput = InputManager.Instance.CameraInput;
 
@@ -35,12 +35,10 @@ public class CameraCtrl : GameMonoBehaviour
         xAxis = Mathf.Clamp(xAxis, minPitchAngle, maxPitchAngle);
         //Limit the x rotation, so the camera can't rotate up and down too much
 
-        transform.localRotation = Quaternion.Euler(xAxis, _controlRotation.y, 0);
+        Quaternion targetRotation = Quaternion.Euler(xAxis, _controlRotation.y, 0);
+        transform.localRotation = Quaternion.Slerp(transform.localRotation,
+            targetRotation,
+            rotationSpeed * Time.deltaTime);
     }
 
 }
-/*
- -> Set control rotation
-
-
-*/
