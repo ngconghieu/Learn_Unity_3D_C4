@@ -6,10 +6,10 @@ public class HeroCtrl : GameMonoBehaviour
 {
     [SerializeField] protected Animator animator;
     [SerializeField] protected CharacterController characterController;
-    [SerializeField] protected CameraCtrl cameraCtrl;
+    [SerializeField] protected CameraManager cameraCtrl;
     public Animator Animator => animator;
     public CharacterController CharacterController => characterController;
-    public CameraCtrl CameraCtrl => cameraCtrl;
+    public CameraManager CameraCtrl => cameraCtrl;
 
     #region Load Components
     protected override void LoadComponents()
@@ -33,7 +33,7 @@ public class HeroCtrl : GameMonoBehaviour
     private void LoadCameraCtrl()
     {
         if(cameraCtrl != null) return;
-        cameraCtrl = FindAnyObjectByType<CameraCtrl>();
+        cameraCtrl = FindAnyObjectByType<CameraManager>();
         cameraCtrl.SetPosition(transform.position);
         Debug.LogWarning("LoadCameraCtrl", gameObject);
     }

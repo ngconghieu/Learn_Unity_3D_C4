@@ -1,10 +1,10 @@
 using System;
 using UnityEngine;
 
-public class CameraCtrl : GameMonoBehaviour
+public class CameraManager : GameMonoBehaviour
 {
     [Header("Camera Position")]
-    [SerializeField] protected float cameraPositionSmoothTime = 0.1f;
+    [SerializeField] protected float speedCamera = 0.1f;
     [SerializeField] protected float cameraHeight = 3.0f;
 
     [Header("Camera Rotation")]
@@ -18,7 +18,8 @@ public class CameraCtrl : GameMonoBehaviour
     public virtual void SetPosition(Vector3 HeroPosition)
     {
         Vector3 cameraPosition = new(HeroPosition.x, HeroPosition.y + cameraHeight, HeroPosition.z);
-        transform.position = Vector3.SmoothDamp(transform.position, cameraPosition, ref _velocity, cameraPositionSmoothTime);
+        transform.position = Vector3.SmoothDamp(transform.position, cameraPosition, ref _velocity, speedCamera);
+        HandleCameraRotation();
     }
 
     public virtual void HandleCameraRotation()
