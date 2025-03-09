@@ -4,7 +4,7 @@ using UnityEngine;
 public class CameraManager : GameMonoBehaviour
 {
     [Header("Camera Position")]
-    [SerializeField] protected float speedCamera = 0.1f;
+    [SerializeField] protected float speedCamera = 0.05f;
     [SerializeField] protected float cameraHeight = 3.0f;
 
     [Header("Camera Rotation")]

@@ -11,6 +11,8 @@ public class HeroCtrl : GameMonoBehaviour
     public CharacterController CharacterController => characterController;
     public CameraManager CameraCtrl => cameraCtrl;
 
+    private void LateUpdate() => cameraCtrl.SetPosition(transform.position);
+
     #region Load Components
     protected override void LoadComponents()
     {

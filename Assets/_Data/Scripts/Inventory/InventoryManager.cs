@@ -23,4 +23,15 @@ public class InventoryManager : Singleton<InventoryManager>
         }
         Debug.LogWarning("LoadInventory", gameObject);
     }
+
+    public T GetInventory<T>() where T : InventoryCtrl
+    {
+        foreach (var inventory in _inventories)
+        {
+            if (inventory is T)
+                return inventory as T;
+        }
+        return null;
+    }
+
 }

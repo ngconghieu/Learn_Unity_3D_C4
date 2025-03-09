@@ -27,14 +27,14 @@ public class EnemyDmgReceiver : DmgReceiver
 
     private void LoadEnemyCtrl()
     {
-        if(enemyCtrl != null) return;
+        if (enemyCtrl != null) return;
         enemyCtrl = GetComponentInParent<EnemyCtrl>();
         Debug.LogWarning("LoadEnemyCtrl", gameObject);
     }
 
     private void LoadCollider()
     {
-        if(col != null) return;
+        if (col != null) return;
         col = GetComponent<CapsuleCollider>();
         col.isTrigger = true;
         col.center = new Vector3(0, 0, 0);
@@ -44,14 +44,14 @@ public class EnemyDmgReceiver : DmgReceiver
     }
     #endregion
 
+    protected override void IsHit()
+    {
+        enemyCtrl.Animator.SetTrigger(Const.IsHit);
+    }
+
     protected override void IsDead()
     {
         enemyCtrl.Animator.SetTrigger(Const.IsDead);
         //gameObject.SetActive(false);
-    }
-
-    protected override void IsHit()
-    {
-        enemyCtrl.Animator.SetTrigger(Const.IsHit);
     }
 }
