@@ -1,6 +1,7 @@
+using System;
 using UnityEngine;
 
-public abstract class BaseState<T> where T : System.Enum
+public abstract class BaseState<T> where T : Enum
 {
     public abstract T StateKey { get; }
 
@@ -12,7 +13,7 @@ public abstract class BaseState<T> where T : System.Enum
 
     public abstract T GetNextState();
 
-    public BaseState(GameObject owner)
+    public BaseState(BaseCtrl owner)
     {
     }
 }

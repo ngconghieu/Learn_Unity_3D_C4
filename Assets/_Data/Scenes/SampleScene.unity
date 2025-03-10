@@ -3343,56 +3343,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 572259969ac26ca4081a29c375b845cc, type: 3}
---- !u!1 &725679111
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 725679112}
-  - component: {fileID: 725679113}
-  m_Layer: 0
-  m_Name: HeroMoving
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &725679112
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 725679111}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 743998162}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &725679113
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 725679111}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e8559352453bb0b4cb467d590910d0a8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  heroCtrl: {fileID: 743998161}
-  walkingSpeed: 5
-  runningSpeedMultiplier: 1.8
-  rotateSpeed: 8
-  isWalking: 0
-  isRunning: 0
 --- !u!1 &737990712
 GameObject:
   m_ObjectHideFlags: 0
@@ -3531,7 +3481,6 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 375322582}
-  - {fileID: 725679112}
   - {fileID: 437991121}
   m_Father: {fileID: 759507271}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -3572,7 +3521,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e588d845e04fab948949abac429c1dfb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  player: {fileID: 743998159}
+  heroCtrl: {fileID: 743998161}
 --- !u!4 &746103787 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 448e07a2377557c4e899a6d81f31659f, type: 3}

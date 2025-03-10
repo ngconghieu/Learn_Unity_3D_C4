@@ -2,7 +2,7 @@ using System;
 using UnityEngine;
 
 [RequireComponent(typeof(CharacterController))]
-public class HeroCtrl : GameMonoBehaviour
+public class HeroCtrl : BaseCtrl
 {
     [SerializeField] protected Animator animator;
     [SerializeField] protected CharacterController characterController;
