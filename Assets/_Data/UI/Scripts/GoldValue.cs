@@ -9,7 +9,6 @@ public class GoldValue : TextAbstract
 
     private void LoadGoldValue()
     {
-        string value;
         if (_item == null)
         {
             Cash cash = InventoryManager.Instance.GetInventory<Cash>();
@@ -18,7 +17,7 @@ public class GoldValue : TextAbstract
             _item = cash.GetItemByItemProfiles(itemProfiles);
             return;
         }
-        value = _item.amount.ToString();
+        string value = _item.amount.ToString();
         text.text = "Gold: " + value;
     }
 }
