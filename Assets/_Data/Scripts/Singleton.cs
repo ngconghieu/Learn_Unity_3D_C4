@@ -19,6 +19,6 @@ public abstract class Singleton<T> : GameMonoBehaviour where T : GameMonoBehavio
             return;
         }
         _instance = this as T;
-        DontDestroyOnLoad(gameObject);
+        //DontDestroyOnLoad(gameObject);
     }
 }

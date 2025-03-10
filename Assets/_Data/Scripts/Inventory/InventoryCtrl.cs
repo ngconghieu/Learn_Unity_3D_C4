@@ -81,7 +81,6 @@ public abstract class InventoryCtrl : GameMonoBehaviour
             amount -= AmountNeededToMaxStack;
         }
     }
-
 }
 
 //item
