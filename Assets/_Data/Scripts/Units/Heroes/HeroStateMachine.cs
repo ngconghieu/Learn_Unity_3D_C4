@@ -15,7 +15,7 @@ public class HeroStateMachine : StateMachine<State>
     private void LoadState()
     {
         states.Add(State.Idle, new HeroIdleState(heroCtrl));
-        states.Add(State.Walk, new HeroWalkState(heroCtrl));
+        states.Add(State.Walk, new HeroMoveState(heroCtrl));
         
 
         currentState = states[State.Idle];

@@ -9,9 +9,8 @@ public abstract class InventoryCtrl : GameMonoBehaviour
     [SerializeField] protected List<ItemProfiles> itemProfiles = new();
     [SerializeField] private List<Item> items = new();
 
-    protected override void LoadComponents()
+    private void Start()
     {
-        base.LoadComponents();
         LoadItemProfiles();
     }
 
@@ -22,6 +21,8 @@ public abstract class InventoryCtrl : GameMonoBehaviour
         if(itemProfiles == null || items == null) return null;
         return items.Find(items => items.itemProfiles == itemProfiles);
     }
+
+    public virtual List<Item> GetItems() => items;
 
     public virtual void AddItem(ItemName itemName, int amount)
     {

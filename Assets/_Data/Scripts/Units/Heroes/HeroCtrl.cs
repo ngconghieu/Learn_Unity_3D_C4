@@ -7,6 +7,7 @@ public class HeroCtrl : BaseCtrl
     [SerializeField] protected Animator animator;
     [SerializeField] protected CharacterController characterController;
     [SerializeField] protected CameraManager cameraCtrl;
+    public HeroMovementSettings Movement;
     public Animator Animator => animator;
     public CharacterController CharacterController => characterController;
     public CameraManager CameraCtrl => cameraCtrl;
@@ -47,4 +48,15 @@ public class HeroCtrl : BaseCtrl
         Debug.LogWarning("LoadAnimator", gameObject);
     }
     #endregion
+
+}
+
+[Serializable]
+public class HeroMovementSettings
+{
+    public float walkingSpeed = 5f;
+    public float runningSpeedMultiplier = 1.8f;
+    public float rotateSpeed = 8;
+    public bool isWalking = false;
+    public bool isRunning = false;
 }
