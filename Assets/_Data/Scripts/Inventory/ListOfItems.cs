@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-using UnityEngine;
 using UnityEngine.AddressableAssets;
 
 public class ListOfItems : InventoryCtrl

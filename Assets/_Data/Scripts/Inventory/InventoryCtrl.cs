@@ -8,6 +8,7 @@ public abstract class InventoryCtrl : GameMonoBehaviour
     [SerializeField] protected AssetLabelReference label;
     [SerializeField] protected List<ItemProfiles> itemProfiles = new();
     [SerializeField] private List<Item> items = new();
+    [HideInInspector] public event Action OnInventoryChanged;
 
     private void Start()
     {
@@ -16,9 +17,9 @@ public abstract class InventoryCtrl : GameMonoBehaviour
 
     protected abstract void LoadItemProfiles();
 
-    public virtual Item GetItemByItemProfiles(ItemProfiles itemProfiles) 
+    public virtual Item GetItemByItemProfiles(ItemProfiles itemProfiles)
     {
-        if(itemProfiles == null || items == null) return null;
+        if (itemProfiles == null || items == null) return null;
         return items.Find(items => items.itemProfiles == itemProfiles);
     }
 
@@ -40,20 +41,51 @@ public abstract class InventoryCtrl : GameMonoBehaviour
             int amountToAdd = Mathf.Min(amountToStack, itemProfiles.maxStack);
             Item item = new()
             {
+                itemID = Guid.NewGuid().ToString(),
                 itemProfiles = itemProfiles,
                 amount = amountToAdd
             };
             items.Add(item);
             amountToStack -= amountToAdd;
         }
+        NotifyInventoryChanged();
     }
 
-    protected virtual bool ItemExists(ItemProfiles itemProfiles) //check existance of item
+    public virtual void RemoveItem(ItemName itemName, int amount)
     {
-        Item item = items.Find(items => items.itemProfiles == itemProfiles);
-        if (item == null)
-            return false;
-        return true;
+        if (amount <= 0) return;
+        if (!CheckItemAmountToRemove(itemName, amount)) return;
+        int remainingAmount = amount;
+        for (int i = items.Count - 1; i >= 0; i--)
+        {
+            if (items[i].itemProfiles.ItemName != itemName)
+                continue;
+            if (remainingAmount <= items[i].amount)
+            {
+                items[i].amount -= remainingAmount;
+                break;
+            }
+            remainingAmount -= items[i].amount; //
+            items[i].amount = 0;
+        }
+        NotifyInventoryChanged();
+        items.RemoveAll(item => item.amount == 0);
+    }
+
+    public void RemoveItem(Item item) =>
+        items.Remove(item);
+
+    public virtual bool CheckItemAmountToRemove(ItemName itemName, int amount)
+    {
+        int consumption = 0;
+        for (int _item = items.Count - 1; _item >= 0; _item--)
+        {
+            if (items[_item].itemProfiles.ItemName != itemName)
+                continue;
+            consumption += items[_item].amount;
+            if (consumption >= amount) return true;
+        }
+        return false;
     }
 
     public virtual ItemProfiles GetItemProfileByItemName(ItemName itemName)
@@ -82,12 +114,18 @@ public abstract class InventoryCtrl : GameMonoBehaviour
             amount -= AmountNeededToMaxStack;
         }
     }
+
+    private void NotifyInventoryChanged()
+    {
+        OnInventoryChanged?.Invoke();
+    }
 }
 
 //item
 [Serializable]
 public class Item
 {
+    public string itemID;
     public ItemProfiles itemProfiles;
     public int amount;
 }

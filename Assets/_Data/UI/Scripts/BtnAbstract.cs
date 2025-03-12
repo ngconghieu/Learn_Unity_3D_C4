@@ -4,7 +4,7 @@ using UnityEngine.UI;
 
 public abstract class BtnAbstract : GameMonoBehaviour
 {
-    [SerializeField] private Button _btn;
+    private Button _btn;
 
     private void Start()
     {
@@ -21,7 +21,6 @@ public abstract class BtnAbstract : GameMonoBehaviour
     {
         if (_btn != null) return;
         _btn = GetComponent<Button>();
-        Debug.LogWarning("LoadButton", gameObject);
     }
 
     private void AddOnClickEvent()

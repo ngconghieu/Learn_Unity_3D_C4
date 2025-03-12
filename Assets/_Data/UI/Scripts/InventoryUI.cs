@@ -7,21 +7,30 @@ public class InventoryUI : Singleton<InventoryUI>
 {
     [SerializeField] protected BtnItem btnItem;
     [SerializeField] private bool isInventoryVisible = false;
-    [SerializeField] private List<Item> items = new();
+    [SerializeField] private Dictionary<Item, BtnItem> _btnItems = new();
+
     private ListOfItems _listOfItems;
 
-    private void Start()
+    private IEnumerator Start()
     {
+        yield return new WaitForSeconds(0.1f);
         Hide();
-        HideDefaultItem();
-        LoadParameters();
+        SetParameters();
     }
 
-    private void FixedUpdate()
+    private void OnEnable()
     {
-        //UpdateItems();
-    }
+        if (_listOfItems == null) return;
+        _listOfItems.OnInventoryChanged += UpdateItems;
+    } // Subscribe to event
 
+    private void OnDisable()
+    {
+        if (_listOfItems == null) return;
+        _listOfItems.OnInventoryChanged -= UpdateItems;
+    } // Unsubscribe from event
+
+    #region Load Components
     protected override void LoadComponents()
     {
         base.LoadComponents();
@@ -34,26 +43,46 @@ public class InventoryUI : Singleton<InventoryUI>
         btnItem = GetComponentInChildren<BtnItem>();
         Debug.LogWarning("LoadBtnItem", gameObject);
     }
+    #endregion
 
-    private void LoadParameters()
+    private void SetParameters()
     {
+        btnItem.gameObject.SetActive(false); // Hide default item
         _listOfItems = InventoryManager.Instance.GetInventory<ListOfItems>();
-        items = _listOfItems.GetItems();
-        AddItemsIntoInventory(items);
+        _listOfItems.OnInventoryChanged += UpdateItems;
     }
 
-    private void AddItemsIntoInventory(List<Item> items)
+    private void UpdateItems()
     {
+        List<Item> items = _listOfItems.GetItems();
+        List<Item> itemsToRemove = new();
         foreach (Item item in items)
         {
+            if (_btnItems.TryGetValue(item, out BtnItem btn)) //Check if item exists
+            {
+                if(item.amount == 0)
+                {
+                    itemsToRemove.Add(item);
+                    continue;
+                }
+                if(btn.GetAmount() != item.amount) //Check if amount has changed
+                    btn.SetAmount(item.amount);
+                continue;
+            }
+            //Handle creation of new item
             BtnItem newBtnItem = Instantiate(btnItem, btnItem.transform.parent);
+            newBtnItem.SetItem(item);
+            newBtnItem.SetAmount(item.amount);
+            newBtnItem.name = item.itemProfiles.ItemName.ToString() + "-" + item.itemID;
+            _btnItems[item] = newBtnItem;
             newBtnItem.gameObject.SetActive(true);
         }
-    }
-
-    private void HideDefaultItem()
-    {
-        btnItem.gameObject.SetActive(false);
+        if(itemsToRemove.Count == 0) return;
+        foreach (Item item in itemsToRemove)
+        {
+            GameObject.Destroy(_btnItems[item].gameObject);
+            _btnItems.Remove(item);
+        }
     }
 
     public void Hide()
@@ -70,13 +99,8 @@ public class InventoryUI : Singleton<InventoryUI>
 
     public void Toggle()
     {
-        if (isInventoryVisible)
-        {
-            Hide();
-        }
-        else
-        {
-            Show();
-        }
+        isInventoryVisible = !isInventoryVisible;
+        gameObject.SetActive(isInventoryVisible);
     }
+
 }
