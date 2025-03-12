@@ -37,7 +37,10 @@ public class SpawnEnemy : Spawner<EnemyCtrl>
         Invoke(nameof(SpawnEnemies), spawnDelay);
         if (enemyCount >= maxEnemy) return;
         int random = UnityEngine.Random.Range(0, enemies.Count);
-        EnemyCtrl newEnemy = Spawn(enemies[random], transform.position, Quaternion.identity);
+        EnemyCtrl newEnemy = Spawn(enemies[random]);
+        newEnemy.transform.SetLocalPositionAndRotation(
+            PathManager.Instance.GetPath(newEnemy.EnemyMoving.PathNum).Points[0].position,
+            Quaternion.identity);
         enemyCount++;
     }
 }

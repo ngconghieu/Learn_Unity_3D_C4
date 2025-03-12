@@ -532,7 +532,7 @@
                     "name": "Submit",
                     "type": "Button",
                     "id": "7607c7b6-cd76-4816-beef-bd0341cfe950",
-                    "expectedControlType": "Button",
+                    "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
@@ -541,7 +541,7 @@
                     "name": "Cancel",
                     "type": "Button",
                     "id": "15cef263-9014-4fd5-94d9-4e4a6234a6ef",
-                    "expectedControlType": "Button",
+                    "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
@@ -1026,34 +1026,6 @@
                     "processors": "",
                     "groups": "XR",
                     "action": "TrackedDeviceOrientation",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                }
-            ]
-        },
-        {
-            "name": "PlayerCustom",
-            "id": "8eafb231-dc46-48a1-9cb4-582aa21254f6",
-            "actions": [
-                {
-                    "name": "Movement",
-                    "type": "Button",
-                    "id": "aba8b949-ba14-49af-8ae4-3bb8e7dcd355",
-                    "expectedControlType": "",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
-                }
-            ],
-            "bindings": [
-                {
-                    "name": "",
-                    "id": "5a2cbfd2-6f5d-4f2b-8cce-5bdf8ac891a6",
-                    "path": "<Keyboard>/w",
-                    "interactions": "Press(behavior=2)",
-                    "processors": "",
-                    "groups": ";Keyboard&Mouse",
-                    "action": "Movement",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

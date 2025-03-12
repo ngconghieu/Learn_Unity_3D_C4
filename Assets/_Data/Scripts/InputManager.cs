@@ -4,8 +4,11 @@ using UnityEngine.InputSystem;
 
 public class InputManager : Singleton<InputManager>
 {
+    [SerializeField] private PlayerInput _playerInput;
     private Vector2 _moveInput;
     private Vector2 _cameraInput;
+
+    public PlayerInput PlayerInput => _playerInput;
     public Vector2 MoveInput => _moveInput;
 
     public Vector2 CameraInput => _cameraInput;
@@ -15,6 +18,19 @@ public class InputManager : Singleton<InputManager>
     public bool IsJumping { get; private set; }
     public bool IsLeftClicking { get; private set; }
     public bool IsRightClicking { get; private set; }
+
+    protected override void LoadComponents()
+    {
+        base.LoadComponents();
+        LoadPlayerInput();
+    }
+
+    private void LoadPlayerInput()
+    {
+        if (_playerInput != null) return;
+        _playerInput = GetComponent<PlayerInput>();
+        Debug.LogWarning("LoadPlayerInput", gameObject);
+    }
 
     public void OnLookEvent(InputAction.CallbackContext context)
     {

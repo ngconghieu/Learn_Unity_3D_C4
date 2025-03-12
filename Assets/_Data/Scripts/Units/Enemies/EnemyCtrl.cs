@@ -6,13 +6,15 @@ using UnityEngine.AI;
 public class EnemyCtrl : GameMonoBehaviour
 {
     [SerializeField] protected NavMeshAgent agent;
-    public NavMeshAgent Agent => agent;
     [SerializeField] protected Animator animator;
-    public Animator Animator => animator;
     [SerializeField] protected DmgReceiver dmgReceiver;
-    public DmgReceiver DmgReceiver => dmgReceiver;
     [SerializeField] protected DespawnEnemy despawnEnemy;
+    [SerializeField] protected EnemyMoving enemyMoving;
+    public DmgReceiver DmgReceiver => dmgReceiver;
+    public Animator Animator => animator;
+    public NavMeshAgent Agent => agent;
     public DespawnEnemy DespawnEnemy => despawnEnemy;
+    public EnemyMoving EnemyMoving => enemyMoving;
 
     #region Load Components
     protected override void LoadComponents()
@@ -22,6 +24,14 @@ public class EnemyCtrl : GameMonoBehaviour
         LoadAnimator();
         LoadDmgReceiver();
         LoadDespawnEnemy();
+        LoadEnemyMoving();
+    }
+
+    private void LoadEnemyMoving()
+    {
+        if (enemyMoving != null) return;
+        enemyMoving = GetComponentInChildren<EnemyMoving>();
+        Debug.LogWarning("LoadEnemyMoving", gameObject);
     }
 
     private void LoadDespawnEnemy()

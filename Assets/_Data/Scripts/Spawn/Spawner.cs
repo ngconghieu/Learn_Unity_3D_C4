@@ -19,6 +19,9 @@ public abstract class Spawner<T> : Singleton<Spawner<T>> where T : MonoBehaviour
     {
         if (prefabHolder != null) return;
         prefabHolder = transform.Find("PrefabHolder");
+        if(prefabHolder == null)
+            prefabHolder = new GameObject("PrefabHolder").transform;
+        prefabHolder.SetParent(transform);
         Debug.LogWarning("LoadPrefabHolder", gameObject);
     }
     #endregion
@@ -27,15 +30,21 @@ public abstract class Spawner<T> : Singleton<Spawner<T>> where T : MonoBehaviour
     {
         T newObject = Spawn(prefab);
         newObject.transform.SetLocalPositionAndRotation(position, rotation);
-        newObject.gameObject.SetActive(true);
-        newObject.transform.SetParent(prefabHolder);
-        newObject.name = prefab.name;
+        return newObject;
+    }
+
+    public virtual T GetObjectFromPool(T prefab)
+    {
+        T newObject = GetObjFromPool(prefab) ?? Instantiate(prefab);
         return newObject;
     }
 
     public virtual T Spawn(T prefab)
     {
-        T newObject = GetObjFromPool(prefab) ?? Instantiate(prefab);
+        T newObject = GetObjectFromPool(prefab);
+        newObject.gameObject.SetActive(true);
+        newObject.transform.SetParent(prefabHolder);
+        newObject.name = prefab.name;
         return newObject;
     }
 

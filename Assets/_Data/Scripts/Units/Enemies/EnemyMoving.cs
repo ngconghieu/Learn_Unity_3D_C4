@@ -14,6 +14,8 @@ public abstract class EnemyMoving : GameMonoBehaviour
     [SerializeField] protected bool canMove = false;
     [SerializeField] protected bool isMoving = false;
 
+    public int PathNum => pathNum;
+
     private void FixedUpdate()
     {
         Moving();
