@@ -26,7 +26,7 @@ public class HeroMoveState : BaseState<State>
 
     public override State GetNextState()
     {
-        bool canChangeState = InputManager.Instance.IsWalking;
+        bool canChangeState = InputManager.Instance.IsMovePressing;
         if(!canChangeState) return State.Idle;
         return StateKey;
     }
@@ -42,8 +42,8 @@ public class HeroMoveState : BaseState<State>
 
     private void CheckMovement()
     {
-        _heroCtrl.Movement.isWalking = InputManager.Instance.IsWalking;
-        _heroCtrl.Movement.isRunning = InputManager.Instance.IsRunning;
+        _heroCtrl.Movement.isWalking = InputManager.Instance.IsMovePressing;
+        _heroCtrl.Movement.isRunning = InputManager.Instance.IsShiftPressing;
     }
 
     private void AnimationHandling()

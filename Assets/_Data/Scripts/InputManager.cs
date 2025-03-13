@@ -5,6 +5,8 @@ using UnityEngine.InputSystem;
 public class InputManager : Singleton<InputManager>
 {
     [SerializeField] private PlayerInput _playerInput;
+
+    [Header("Ingame Inputs")]
     private Vector2 _moveInput;
     private Vector2 _cameraInput;
 
@@ -12,12 +14,16 @@ public class InputManager : Singleton<InputManager>
     public Vector2 MoveInput => _moveInput;
 
     public Vector2 CameraInput => _cameraInput;
+
     public float ScrollInput { get; private set; }
-    public bool IsWalking { get; private set; }
-    public bool IsRunning { get; private set; }
-    public bool IsJumping { get; private set; }
+    public bool IsMovePressing { get; private set; }
+    public bool IsShiftPressing { get; private set; }
+    public bool IsSpacePressing { get; private set; }
     public bool IsLeftClicking { get; private set; }
     public bool IsRightClicking { get; private set; }
+
+    [Header("UI Inputs")]
+    public bool IsPausePressed { get; private set; }
 
     protected override void LoadComponents()
     {
@@ -37,34 +43,34 @@ public class InputManager : Singleton<InputManager>
         _cameraInput = context.ReadValue<Vector2>();
     }
 
-    public void OnMoveEvent(InputAction.CallbackContext context)
+    public void OnMovePressingEvent(InputAction.CallbackContext context)
     {
         _moveInput = context.ReadValue<Vector2>();
-        IsWalking = _moveInput.x != 0 || _moveInput.y != 0;
+        IsMovePressing = _moveInput.x != 0 || _moveInput.y != 0;
         if (context.canceled)
         {
             _moveInput = Vector2.zero;
-            IsWalking = false;
-            IsRunning = false;
+            IsMovePressing = false;
+            IsShiftPressing = false;
         }
     }
 
-    public void OnSprintEvent(InputAction.CallbackContext context)
+    public void OnShiftPressingEvent(InputAction.CallbackContext context)
     {
-        IsRunning = context.ReadValueAsButton();
+        IsShiftPressing = context.ReadValueAsButton();
     }
 
-    public void OnJumpEvent(InputAction.CallbackContext context)
+    public void OnSpacePressingEvent(InputAction.CallbackContext context)
     {
-        IsJumping = context.ReadValueAsButton();
+        IsSpacePressing = context.ReadValueAsButton();
     }
 
-    public void OnAttackEvent(InputAction.CallbackContext context)
+    public void OnLeftClickingEvent(InputAction.CallbackContext context)
     {
         IsLeftClicking = context.ReadValueAsButton();
     }
 
-    public void OnBlockEvent(InputAction.CallbackContext context)
+    public void OnRightClickingEvent(InputAction.CallbackContext context)
     {
         IsRightClicking = context.ReadValueAsButton();
     }
@@ -73,4 +79,15 @@ public class InputManager : Singleton<InputManager>
     {
         ScrollInput = context.ReadValue<Vector2>().y; 
     }
+
+    public void OnEscapePressingEvent(InputAction.CallbackContext context)
+    {
+        if (context.started)
+        {
+            IsPausePressed = !IsPausePressed;
+            _playerInput.SwitchCurrentActionMap(IsPausePressed ? Const.UI : Const.Player);
+        }
+    }
+
+
 }

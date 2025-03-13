@@ -25,6 +25,8 @@ public abstract class InventoryCtrl : GameMonoBehaviour
 
     public virtual List<Item> GetItems() => items;
 
+    public virtual List<ItemProfiles> GetItemProfiles() => itemProfiles;
+
     public virtual void AddItem(ItemName itemName, int amount)
     {
         ItemProfiles itemProfiles = GetItemProfileByItemName(itemName);

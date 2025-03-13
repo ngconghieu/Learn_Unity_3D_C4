@@ -24,7 +24,7 @@ public class HeroIdleState : BaseState<State>
 
     public override State GetNextState()
     {
-        bool canChangeState = InputManager.Instance.IsWalking;
+        bool canChangeState = InputManager.Instance.IsMovePressing;
         if(canChangeState)
         {
             return State.Walk;
