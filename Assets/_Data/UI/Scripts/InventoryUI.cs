@@ -73,6 +73,7 @@ public class InventoryUI : Singleton<InventoryUI>
             BtnItem newBtnItem = Instantiate(btnItem, btnItem.transform.parent);
             newBtnItem.SetItem(item);
             newBtnItem.SetAmount(item.amount);
+            newBtnItem.SetSprite(item.itemProfiles.sprite);
             newBtnItem.name = item.itemProfiles.ItemName.ToString() + "-" + item.itemID;
             _btnItems[item] = newBtnItem;
             newBtnItem.gameObject.SetActive(true);

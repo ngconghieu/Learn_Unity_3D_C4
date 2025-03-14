@@ -22,6 +22,11 @@ public class HeroIdleState : BaseState<State>
         //Debug.Log("Updating Idle State");
     }
 
+    public override void FixedUpdateState()
+    {
+        
+    }
+
     public override State GetNextState()
     {
         bool canChangeState = InputManager.Instance.IsWalking;

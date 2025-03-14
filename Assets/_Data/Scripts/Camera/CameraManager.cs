@@ -28,16 +28,12 @@ public class CameraManager : GameMonoBehaviour
 
         // Y Rotation (Yaw Rotation)
         _controlRotation.y += camInput.x; //if mouse right, then y rotation is right
+        _controlRotation.y %= 360; //keep the value between 0 and 360
 
         // X Rotation (Pitch Rotation)
-        _controlRotation.x -= camInput.y; //if mouse up, then x rotation is down
+        _controlRotation.x = Mathf.Clamp(_controlRotation.x - camInput.y, minPitchAngle, maxPitchAngle); //Limit the x rotation
 
-        //SetControlRotation(_controlRotation);
-        float xAxis = _controlRotation.x;
-        xAxis = Mathf.Clamp(xAxis, minPitchAngle, maxPitchAngle);
-        //Limit the x rotation, so the camera can't rotate up and down too much
-
-        Quaternion targetRotation = Quaternion.Euler(xAxis, _controlRotation.y, 0);
+        Quaternion targetRotation = Quaternion.Euler(_controlRotation.x, _controlRotation.y, 0);
         transform.localRotation = Quaternion.Slerp(transform.localRotation,
             targetRotation,
             rotationSpeed * Time.deltaTime);

@@ -11,6 +11,8 @@ public abstract class BaseState<T> where T : Enum
 
     public abstract void UpdateState();
 
+    public abstract void FixedUpdateState();
+
     public abstract T GetNextState();
 
     public BaseState(BaseCtrl owner)

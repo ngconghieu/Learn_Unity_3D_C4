@@ -27,7 +27,7 @@ public class HeroMoveState : BaseState<State>
     public override State GetNextState()
     {
         bool canChangeState = InputManager.Instance.IsWalking;
-        if(!canChangeState) return State.Idle;
+        if (!canChangeState) return State.Idle;
         return StateKey;
     }
 
@@ -37,6 +37,7 @@ public class HeroMoveState : BaseState<State>
         CheckMovement();
         AnimationHandling();
         CheckMoving();
+        Moving();
     }
 
 
@@ -56,14 +57,12 @@ public class HeroMoveState : BaseState<State>
     {
         if (!_heroCtrl.Movement.isWalking) return;
         _movingInput = InputManager.Instance.MoveInput;
-        //Get rotation of hero though camera
-        _yAxis = Quaternion.Euler(0, _heroCtrl.CameraCtrl.ControlRotation.y, 0);
+
+        _yAxis = Quaternion.Euler(0, _heroCtrl.CameraCtrl.ControlRotation.y, 0); //Get the rotation of the hero through the camera
         Vector3 forward = _yAxis * Vector3.forward;
         Vector3 right = _yAxis * Vector3.right;
         _movingDirection = (forward * _movingInput.y + right * _movingInput.x).normalized;
-        float speed = _heroCtrl.Movement.isRunning ? (_heroCtrl.Movement.runningSpeedMultiplier * _heroCtrl.Movement.walkingSpeed) : _heroCtrl.Movement.walkingSpeed;
         RotateHero();
-        Moving(speed);
     }
 
     private void RotateHero()
@@ -75,8 +74,19 @@ public class HeroMoveState : BaseState<State>
             Time.deltaTime * _heroCtrl.Movement.rotateSpeed);
     }
 
-    private void Moving(float speed)
+    public override void FixedUpdateState()
     {
-        _heroCtrl.CharacterController.Move(speed * Time.deltaTime * _movingDirection);
+        //Moving();
+    }
+
+    private void Moving()
+    {
+        if (_movingInput == Vector2.zero)
+        {
+            _heroCtrl.Rigidbody.linearVelocity = Vector3.zero;
+            return;
+        }
+        float speed = _heroCtrl.Movement.isRunning ? (_heroCtrl.Movement.runningSpeedMultiplier * _heroCtrl.Movement.walkingSpeed) : _heroCtrl.Movement.walkingSpeed;
+        _heroCtrl.Rigidbody.MovePosition(_heroCtrl.transform.position + speed * Time.fixedDeltaTime * _movingDirection);
     }
 }

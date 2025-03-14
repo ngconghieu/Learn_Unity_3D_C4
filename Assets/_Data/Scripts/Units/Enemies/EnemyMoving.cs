@@ -5,7 +5,7 @@ using UnityEngine.AI;
 public abstract class EnemyMoving : GameMonoBehaviour
 {
     [SerializeField] protected EnemyCtrl enemyCtrl;
-    [SerializeField] protected Path enemyPath;
+    [SerializeField] protected FollowPath enemyPath;
     [SerializeField] protected int pathNum;
     [SerializeField] protected Transform currentPoint;
     [SerializeField] protected float pointDistance = Mathf.Infinity;

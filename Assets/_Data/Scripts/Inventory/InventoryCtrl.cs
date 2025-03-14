@@ -28,6 +28,7 @@ public abstract class InventoryCtrl : GameMonoBehaviour
     public virtual void AddItem(ItemName itemName, int amount)
     {
         ItemProfiles itemProfiles = GetItemProfileByItemName(itemName);
+        if(itemProfiles == null) return;
         int amountToStack = amount;
 
         foreach (Item item in items) // fill up existing stacks

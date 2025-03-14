@@ -7,6 +7,9 @@ public abstract class DmgReceiver : GameMonoBehaviour
     [SerializeField] private int _maxHP = 10;
     [SerializeField] private bool _immortal = false;
 
+    public int CurrentHP => _currentHP;
+    public int MaxHP => _maxHP;
+
     protected override void ResetValue()
     {
         base.ResetValue();

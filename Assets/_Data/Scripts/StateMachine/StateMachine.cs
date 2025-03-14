@@ -25,6 +25,11 @@ public abstract class StateMachine<T> : GameMonoBehaviour where T: Enum
         }
     }
 
+    public void FixedUpdate()
+    {
+        currentState?.FixedUpdateState();
+    }
+
     private void ChangeState(T nextStateKey)
     {
         if(isChangingState)

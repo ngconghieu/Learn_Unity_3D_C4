@@ -14,4 +14,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   InventoryName: 2
   ItemName: 2
+  sprite: {fileID: 1818772706, guid: 7db3e4514c8be304994577dc6bf11ad6, type: 3}
   maxStack: 1

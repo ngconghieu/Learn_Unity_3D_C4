@@ -1,15 +1,18 @@
 using System;
 using UnityEngine;
 
-[RequireComponent(typeof(CharacterController))]
+[RequireComponent(typeof(CapsuleCollider))]
+[RequireComponent(typeof(Rigidbody))]
 public class HeroCtrl : BaseCtrl
 {
     [SerializeField] protected Animator animator;
-    [SerializeField] protected CharacterController characterController;
+    [SerializeField] protected CapsuleCollider capsuleCollider;
+    [SerializeField] protected Rigidbody rb;
     [SerializeField] protected CameraManager cameraCtrl;
     public HeroMovementSettings Movement;
     public Animator Animator => animator;
-    public CharacterController CharacterController => characterController;
+    public CapsuleCollider CapsuleCollider => capsuleCollider;
+    public Rigidbody Rigidbody => rb;
     public CameraManager CameraCtrl => cameraCtrl;
 
     private void LateUpdate() => cameraCtrl.SetPosition(transform.position);
@@ -19,18 +22,27 @@ public class HeroCtrl : BaseCtrl
     {
         base.LoadComponents();
         LoadAnimator();
-        LoadCharacterController();
+        LoadCollider();
+        LoadRigibody();
         LoadCameraCtrl();
     }
 
-    private void LoadCharacterController()
+    private void LoadRigibody()
     {
-        if (characterController != null) return;
-        characterController = GetComponent<CharacterController>();
-        characterController.height = 3.4f;
-        characterController.center = new Vector3(0, 1.7f, 0);
-        characterController.radius = 0.3f;
-        Debug.LogWarning("LoadCharacterController", gameObject);
+        if (rb != null) return;
+        rb = GetComponent<Rigidbody>();
+        rb.constraints = RigidbodyConstraints.FreezeRotation;
+        Debug.LogWarning("LoadRigibody", gameObject);
+    }
+
+    private void LoadCollider()
+    {
+        if (capsuleCollider != null) return;
+        capsuleCollider = GetComponent<CapsuleCollider>();
+        capsuleCollider.height = 3.4f;
+        capsuleCollider.center = new Vector3(0, 1.7f, 0);
+        capsuleCollider.radius = 0.3f;
+        Debug.LogWarning("LoadCollider", gameObject);
     }
 
     private void LoadCameraCtrl()
